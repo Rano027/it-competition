@@ -36,6 +36,9 @@ export const HomePage = () => {
       .sort((a, b) => (a.order || 0) - (b.order || 0))
       .filter((sec) => sec.enabled !== false);
   }, [config?.sections]);
+  
+  console.log('CONFIG SECTIONS:', config?.sections);
+  console.log('ORDERED SECTIONS:', orderedSections);
 
   // If a published Visual Builder page is available, render via DynamicPageRenderer
  /*
