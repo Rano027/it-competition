@@ -38,13 +38,20 @@ export const HomePage = () => {
   }, [config?.sections]);
 
   // If a published Visual Builder page is available, render via DynamicPageRenderer
-  if (builderPage && builderPage.elements && builderPage.elements.length > 0 && builderPage.status === 'published') {
-    return (
-      <div className="relative overflow-hidden">
-        <DynamicPageRenderer page={builderPage} isEditMode={false} />
-      </div>
-    );
-  }
+ /*
+if (
+  builderPage &&
+  builderPage.elements &&
+  builderPage.elements.length > 0 &&
+  builderPage.status === 'published'
+) {
+  return (
+    <div className="relative overflow-hidden">
+      <DynamicPageRenderer page={builderPage} isEditMode={false} />
+    </div>
+  );
+}
+*/
 
   return (
     <div className="relative overflow-hidden">
