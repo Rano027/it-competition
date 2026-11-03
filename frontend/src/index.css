@@ -1,93 +1,111 @@
+```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --color-bg: #ffffff;
+  /* Future Campus Color System */
+  --color-bg: #f8fafc;
   --color-surface: #ffffff;
-  --color-surface-card: #f8f8f6;
-  --color-surface-raised: #f3f3ef;
+  --color-surface-card: #ffffff;
+  --color-surface-raised: #f1f5f9;
 
   --color-primary: #facc15;
-  --color-highlight: #facc15;
-  --color-accent: #eab308;
+  --color-primary-dark: #eab308;
+  --color-yellow: #facc15;
+  --color-yellow-light: #fef9c3;
 
-  --color-text: #111827;
-  --color-text-muted: #4b5563;
-  --color-text-dim: #6b7280;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-text-dim: #94a3b8;
 
-  --color-border: #e5e7eb;
-  --color-border-glow: rgba(250, 204, 21, 0.35);
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+
   --color-focus: #facc15;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: #ffffff;
-    color: #111827;
+    background-color: #f8fafc;
+    color: #0f172a;
   }
 
   body {
     margin: 0;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: #ffffff;
-    color: #111827;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
     overflow-x: hidden;
   }
 
   ::selection {
     background-color: #facc15;
-    color: #111827;
+    color: #0f172a;
   }
 }
 
 /* =========================================
    FUTURE CAMPUS UTILITIES
-========================================= */
+   ========================================= */
 
-.fest-grid-pattern {
+.campus-grid {
   background-image:
-    linear-gradient(
-      to right,
-      rgba(17, 24, 39, 0.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(17, 24, 39, 0.04) 1px,
-      transparent 1px
-    );
-
+    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
-.fest-grid-dense {
+.campus-grid-dense {
   background-image:
-    linear-gradient(
-      to right,
-      rgba(17, 24, 39, 0.05) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(17, 24, 39, 0.05) 1px,
-      transparent 1px
-    );
-
+    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
-/* Text */
+/* Yellow highlight */
+.yellow-highlight {
+  background-color: #facc15;
+}
+
+/* Text utilities */
+.text-campus {
+  color: #0f172a;
+}
+
+.text-campus-muted {
+  color: #64748b;
+}
+
+.text-campus-light {
+  color: #94a3b8;
+}
+
+/* Soft campus shadow */
+.campus-shadow {
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.06),
+    0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.campus-shadow-lg {
+  box-shadow:
+    0 20px 50px rgba(15, 23, 42, 0.08),
+    0 5px 15px rgba(15, 23, 42, 0.04);
+}
+
+/* =========================================
+   COMPATIBILITY
+   ========================================= */
 
 .text-gradient-fire {
   background: linear-gradient(
     135deg,
-    #111827 0%,
-    #374151 55%,
+    #0f172a 0%,
+    #334155 60%,
     #facc15 100%
   );
-
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -96,46 +114,41 @@
   background: linear-gradient(
     135deg,
     #facc15 0%,
-    #eab308 50%,
-    #ca8a04 100%
+    #eab308 100%
   );
-
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Yellow shadows */
-
-.orange-glow-sm {
-  box-shadow:
-    0 8px 20px rgba(250, 204, 21, 0.18);
-}
-
-.orange-glow-md {
-  box-shadow:
-    0 12px 30px rgba(250, 204, 21, 0.22);
-}
-
+/*
+  Compatibility untuk component lama.
+  Tidak lagi menggunakan glow orange.
+*/
+.orange-glow-sm,
+.orange-glow-md,
 .orange-glow-lg {
-  box-shadow:
-    0 20px 50px rgba(250, 204, 21, 0.25);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
 }
 
-/* Custom Scrollbar */
+/* =========================================
+   SCROLLBAR
+   ========================================= */
 
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f3f4f6;
+  background: #f8fafc;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
+  background: #cbd5e1;
+  border-radius: 999px;
+  border: 2px solid #f8fafc;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #facc15;
+  background: #94a3b8;
 }
+```
