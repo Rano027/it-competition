@@ -25,6 +25,8 @@ const SECTION_COMPONENTS = {
 };
 
 export const HomePage = () => {
+  console.log('HOME PAGE TERPANGGIL');
+  
   const { config } = useWebsiteConfig();
   const builderPage = useBuilderPage('home');
 
