@@ -1,229 +1,337 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, ChevronDown, Trophy, Users, Calendar, ShieldCheck } from 'lucide-react';
-import Button from '../ui/Button';
+import {
+  ArrowRight,
+  Sparkles,
+  ChevronDown,
+  Trophy,
+  Users,
+  Calendar,
+  ShieldCheck,
+} from 'lucide-react';
 import { useWebsiteConfig } from '../../context/WebsiteConfigContext';
 
 export const HeroSection = () => {
   const { config } = useWebsiteConfig();
+
   const hero = config?.hero || {};
   const general = config?.general || {};
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
+
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      el.scrollIntoView({
+        behavior: 'smooth',
+      });
     }
   };
 
   return (
-    <section className="relative min-h-[92vh] flex flex-col justify-center overflow-hidden bg-[#100B08] pt-24 pb-16 border-b border-[rgba(255,179,107,0.12)]">
-      {/* 1. Ambient Background Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] sm:w-[850px] sm:h-[850px] bg-[radial-gradient(circle,rgba(255,106,0,0.14)_0%,rgba(255,122,26,0.06)_40%,transparent_70%)] pointer-events-none blur-3xl -z-10" />
-      <div className="absolute top-10 right-10 w-96 h-96 bg-[radial-gradient(circle,rgba(255,179,107,0.06)_0%,transparent_70%)] pointer-events-none blur-2xl -z-10" />
-      
-      {/* 2. Technical Grid & Scanline Pattern */}
-      <div className="absolute inset-0 fest-grid-pattern opacity-60 pointer-events-none -z-10" />
+    <section className="relative overflow-hidden border-b border-slate-200 bg-white pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20">
+      {/* Decorative Background */}
+      <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-yellow-200/40 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-yellow-100/50 blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
-          {/* Left Column: Headline, Copy & CTAs (7 cols) */}
-          <div className="lg:col-span-7 space-y-8 text-center lg:text-left">
-            
-            {/* Edition & System Badge */}
-            <motion.div 
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        {/* Main Hero */}
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-10">
+
+          {/* LEFT CONTENT */}
+          <div className="lg:col-span-7">
+
+            {/* Badge */}
+            <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#1C1410] border border-[rgba(255,179,107,0.28)] shadow-[0_0_15px_rgba(255,106,0,0.12)] text-xs font-mono text-[#FFB36B]"
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-600"
             >
-              <span className="w-2 h-2 rounded-full bg-[#FF6A00] animate-ping" />
-              <span className="font-bold tracking-wider uppercase">
-                {hero.badgeText || general.editionTag || 'EDITION 2026 // NATIONAL TECHFEST'}
+              <span className="h-2 w-2 rounded-full bg-yellow-400" />
+
+              <span>
+                {hero.badgeText ||
+                  general.editionTag ||
+                  'EDITION 2026 // NATIONAL TECHFEST'}
               </span>
-              <span className="text-[rgba(255,179,107,0.4)]">|</span>
-              <span className="text-[#C4B3A7] hidden sm:inline">
+
+              <span className="hidden text-slate-300 sm:inline">
+                //
+              </span>
+
+              <span className="hidden text-slate-400 sm:inline">
                 {general.editionType || 'HYBRID FESTIVAL'}
               </span>
             </motion.div>
 
-            {/* Oversized Cinematic Headline */}
-            <motion.div 
+            {/* Heading */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="space-y-1"
             >
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-display tracking-tight text-[#FFF7F0] leading-[1.05]">
-                {hero.headlineLine1 || 'SHAPE THE'} <br />
-                {hero.headlineLine2 || 'FUTURE OF'} <br />
-                <span className="text-gradient-orange drop-shadow-sm">
-                  {hero.headlineAccent || 'INNOVATION.'}
+              <h1 className="max-w-4xl text-5xl font-black leading-[0.98] tracking-tight text-slate-950 sm:text-6xl lg:text-7xl xl:text-8xl">
+
+                {hero.headlineLine1 || 'SHAPE THE'}
+
+                <br />
+
+                {hero.headlineLine2 || 'FUTURE OF'}
+
+                <br />
+
+                <span className="relative inline-block">
+                  <span className="relative z-10 text-slate-950">
+                    {hero.headlineAccent || 'INNOVATION.'}
+                  </span>
+
+                  {/* Yellow Highlight */}
+                  <span className="absolute bottom-1 left-0 right-0 -z-0 h-3 bg-yellow-300 sm:h-4" />
                 </span>
+
               </h1>
             </motion.div>
 
-            {/* Concise Supporting Description */}
-            <motion.p 
+            {/* Description */}
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base sm:text-lg text-[#C4B3A7] max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans"
+              className="mt-6 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg"
             >
-              {hero.description || 'Where technology meets bold creativity, ambitious minds collaborate, and breakthrough digital architectures redefine the future of Ciayumajakuning and Indonesia.'}
+              {hero.description ||
+                'Kompetisi teknologi informasi dan festival inovasi digital bergengsi se-Indonesia. Kembangkan solusi digital berdampak tinggi, raih prize pool puluhan juta rupiah, dan perluas jejaring profesional.'}
             </motion.p>
 
-            {/* Primary & Secondary Action CTAs */}
-            <motion.div 
+            {/* CTA */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2"
+              className="mt-8 flex flex-col gap-3 sm:flex-row"
             >
-              <Link to={hero.primaryCtaLink || '/register'} className="w-full sm:w-auto">
-                <Button variant="glow" size="lg" className="w-full sm:w-auto gap-2 group">
-                  <span>{hero.primaryCtaText || 'Daftar Sekarang'}</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Button>
+              {/* Primary CTA */}
+              <Link
+                to={hero.primaryCtaLink || '/register'}
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 px-6 py-3.5 text-sm font-bold text-slate-950 shadow-[0_8px_25px_rgba(250,204,21,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-yellow-300 hover:shadow-[0_12px_30px_rgba(250,204,21,0.35)] sm:w-auto"
+              >
+                <span>
+                  {hero.primaryCtaText || 'Daftar Sekarang'}
+                </span>
+
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
-              <Button 
-                variant="secondary" 
-                size="lg" 
+
+              {/* Secondary CTA */}
+              <button
+                type="button"
                 onClick={() => {
                   if (hero.secondaryCtaLink?.startsWith('#')) {
-                    scrollToSection(hero.secondaryCtaLink.substring(1));
+                    scrollToSection(
+                      hero.secondaryCtaLink.substring(1)
+                    );
                   } else {
                     scrollToSection('competitions');
                   }
                 }}
-                className="w-full sm:w-auto gap-2"
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-bold text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-400 hover:bg-slate-50 sm:w-auto"
               >
-                <Sparkles className="w-4 h-4 text-[#FFB36B]" />
-                <span>{hero.secondaryCtaText || 'Eksplorasi Cabang Lomba'}</span>
-              </Button>
+                <Sparkles className="h-4 w-4 text-yellow-500 transition-transform group-hover:rotate-12" />
+
+                <span>
+                  {hero.secondaryCtaText ||
+                    'Eksplorasi Cabang Lomba'}
+                </span>
+              </button>
             </motion.div>
 
-
-            {/* Technical Verification Status */}
-            <motion.div 
+            {/* Trust / Status */}
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-[#948277] font-mono"
+              className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-500"
             >
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-[#FF7A1A]" />
-                <span>Terakreditasi Institusi Resmi</span>
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-yellow-500" />
+
+                <span>
+                  Terakreditasi Institusi Resmi
+                </span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span className="text-[#C4B3A7]">Portal Pendaftaran Aktif</span>
+
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+
+                <span>
+                  Portal Pendaftaran Aktif
+                </span>
               </div>
             </motion.div>
 
           </div>
 
-          {/* Right Column: Abstract Futuristic Tech Visual (5 cols) */}
-          <div className="lg:col-span-5 flex items-center justify-center relative">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center"
+          {/* RIGHT VISUAL */}
+          <div className="lg:col-span-5">
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="relative mx-auto max-w-lg"
             >
-              {/* Outer Rotating Cyber Orbital Ring */}
-              <div className="absolute inset-0 rounded-full border border-[rgba(255,179,107,0.2)] animate-[spin_25s_linear_infinite]" />
-              
-              {/* Middle Dashed Ring */}
-              <div className="absolute inset-6 rounded-full border border-dashed border-[#FF7A1A]/40 animate-[spin_18s_linear_infinite_reverse]" />
-              
-              {/* Inner Glowing Hex / Radial Frame */}
-              <div className="absolute inset-16 rounded-full bg-gradient-to-tr from-[#1C1410] via-[#211811] to-[#17110D] border border-[rgba(255,179,107,0.35)] shadow-[0_0_35px_rgba(255,106,0,0.3)] flex items-center justify-center">
-                {/* Central Emblem Core */}
-                <div className="relative text-center p-6 space-y-2">
-                  <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-[#FF6A00] to-[#FFB36B] flex items-center justify-center shadow-orange-glow">
-                    <span className="font-display font-black text-2xl text-white">N</span>
+
+              {/* Main Visual Placeholder */}
+              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-xl">
+
+                {/* Yellow Decorative Shape */}
+                <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-yellow-300/70" />
+
+                <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-yellow-200/60" />
+
+                {/* Temporary Placeholder */}
+                <div className="relative flex h-full flex-col items-center justify-center p-8 text-center">
+
+                  <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-yellow-400 shadow-lg">
+                    <span className="text-3xl font-black text-slate-950">
+                      N
+                    </span>
                   </div>
-                  <div className="font-mono text-xs font-bold text-[#FFB36B] tracking-widest">
-                    NEXUS // 2026
-                  </div>
-                  <div className="text-[10px] text-[#948277] font-mono tracking-wider">
-                    TECH FESTIVAL
-                  </div>
+
+                  <p className="text-sm font-bold uppercase tracking-widest text-slate-400">
+                    NEXUS ITC 2026
+                  </p>
+
+                  <p className="mt-2 max-w-xs text-sm leading-relaxed text-slate-500">
+                    Visual event / campus photo akan ditempatkan di area ini.
+                  </p>
+
                 </div>
               </div>
 
-              {/* Floating Telemetry Coordinates */}
-              <div className="absolute -top-2 left-4 px-3 py-1 rounded bg-[#17110D]/90 border border-[rgba(255,179,107,0.25)] text-[10px] font-mono text-[#FFB36B] backdrop-blur-md">
-                SYS: ACTIVE // v2.6
-              </div>
-              <div className="absolute -bottom-2 right-4 px-3 py-1 rounded bg-[#17110D]/90 border border-[rgba(255,179,107,0.25)] text-[10px] font-mono text-[#FFB36B] backdrop-blur-md">
-                LOC: CIAYUMAJAKUNING
-              </div>
+              {/* Floating Info Card */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="absolute -bottom-5 -left-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-xl sm:-left-6"
+              >
+                <div className="flex items-center gap-3">
+
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-100">
+                    <Trophy className="h-5 w-5 text-yellow-600" />
+                  </div>
+
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                      Total Prize Pool
+                    </p>
+
+                    <p className="text-base font-black text-slate-900">
+                      {hero.highlightStats?.[0]?.value ||
+                        'Rp 50.000.000+'}
+                    </p>
+                  </div>
+
+                </div>
+              </motion.div>
+
             </motion.div>
+
           </div>
 
         </div>
 
-        {/* 3. Event Key Metadata Banner */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+        {/* EVENT STATS */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-16 pt-8 border-t border-[rgba(255,179,107,0.16)] grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
+          className="mt-16 grid grid-cols-2 gap-4 border-t border-slate-200 pt-8 lg:grid-cols-4 lg:gap-8"
         >
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#948277]">
-              <Trophy className="w-3.5 h-3.5 text-[#FF6A00]" />
-              <span>{hero.highlightStats?.[0]?.label || 'Total Hadiah'}</span>
+
+          {/* Stat 1 */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-1 hover:shadow-md sm:p-5">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <Trophy className="h-4 w-4 text-yellow-500" />
+
+              <span>
+                {hero.highlightStats?.[0]?.label ||
+                  'Total Hadiah'}
+              </span>
             </div>
-            <p className="text-xl sm:text-2xl font-black font-display text-[#FFF7F0]">
-              {hero.highlightStats?.[0]?.value || 'Rp 50.000.000+'}
+
+            <p className="text-xl font-black text-slate-900 sm:text-2xl">
+              {hero.highlightStats?.[0]?.value ||
+                'Rp 50.000.000+'}
             </p>
           </div>
 
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#948277]">
-              <Users className="w-3.5 h-3.5 text-[#FF7A1A]" />
-              <span>{hero.highlightStats?.[1]?.label || 'Jenjang Peserta'}</span>
+          {/* Stat 2 */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-1 hover:shadow-md sm:p-5">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <Users className="h-4 w-4 text-yellow-500" />
+
+              <span>
+                {hero.highlightStats?.[1]?.label ||
+                  'Target Peserta'}
+              </span>
             </div>
-            <p className="text-xl sm:text-2xl font-black font-display text-[#FFF7F0]">
-              {hero.highlightStats?.[1]?.value || 'Mahasiswa & SMA'}
+
+            <p className="text-xl font-black text-slate-900 sm:text-2xl">
+              {hero.highlightStats?.[1]?.value ||
+                '1.500+'}
             </p>
           </div>
 
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#948277]">
-              <Calendar className="w-3.5 h-3.5 text-[#FFB36B]" />
-              <span>Periode Lomba</span>
+          {/* Stat 3 */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-1 hover:shadow-md sm:p-5">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <Calendar className="h-4 w-4 text-yellow-500" />
+
+              <span>
+                Periode Acara
+              </span>
             </div>
-            <p className="text-xl sm:text-2xl font-black font-display text-[#FFF7F0]">
-              {general.eventDates || 'Februari - Mei 2026'}
+
+            <p className="text-xl font-black text-slate-900 sm:text-2xl">
+              {general.eventDates ||
+                'November 2026'}
             </p>
           </div>
 
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#948277]">
-              <Sparkles className="w-3.5 h-3.5 text-[#FF6A00]" />
-              <span>{hero.highlightStats?.[2]?.label || 'Cabang Utama'}</span>
+          {/* Stat 4 */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-1 hover:shadow-md sm:p-5">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <Sparkles className="h-4 w-4 text-yellow-500" />
+
+              <span>
+                {hero.highlightStats?.[2]?.label ||
+                  'Dewan Juri'}
+              </span>
             </div>
-            <p className="text-xl sm:text-2xl font-black font-display text-[#FFF7F0]">
-              {hero.highlightStats?.[2]?.value || '6 Kategori Kompetisi'}
+
+            <p className="text-xl font-black text-slate-900 sm:text-2xl">
+              {hero.highlightStats?.[2]?.value ||
+                '12 Juri'}
             </p>
           </div>
+
         </motion.div>
 
-        {/* 4. Subtle Scroll Indicator */}
-        <div className="pt-10 flex justify-center">
-          <button 
-            onClick={() => scrollToSection('about')} 
-            className="flex flex-col items-center gap-1.5 text-xs text-[#948277] hover:text-[#FFB36B] transition-colors group focus:outline-none"
+        {/* Scroll Indicator */}
+        <div className="mt-10 flex justify-center">
+          <button
+            type="button"
+            onClick={() => scrollToSection('about')}
+            className="group flex flex-col items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-slate-400 transition-colors hover:text-slate-700"
             aria-label="Scroll to About section"
           >
-            <span className="font-mono text-[11px] tracking-widest uppercase">Eksplorasi</span>
-            <ChevronDown className="w-4 h-4 text-[#FF7A1A] animate-bounce group-hover:text-[#FF6A00]" />
+            <span>Eksplorasi</span>
+
+            <ChevronDown className="h-4 w-4 animate-bounce text-yellow-500 transition-colors group-hover:text-yellow-600" />
           </button>
         </div>
 

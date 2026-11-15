@@ -98,9 +98,11 @@ class Competition extends Model
 
     // Scopes
     public function scopePublished(Builder $query): Builder
-    {
-        return $query->where('is_published', true);
-    }
+{
+    return $query
+        ->where('is_published', true)
+        ->where('status', '!=', CompetitionStatus::Archived->value);
+}
 
     public function scopeCategory(Builder $query, CompetitionCategory|string|null $category): Builder
     {

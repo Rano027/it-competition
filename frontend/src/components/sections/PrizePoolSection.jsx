@@ -1,87 +1,162 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, Award, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import {
+  Trophy,
+  Award,
+  ArrowRight,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import Button from '../ui/Button';
 import { PRIZE_BREAKDOWN } from '../../data/festivalData';
 
 export const PrizePoolSection = () => {
   return (
-    <section className="relative py-24 sm:py-32 bg-[#17110D] border-b border-[rgba(255,179,107,0.12)] overflow-hidden">
-      {/* Cinematic Orange Radial Glow Behind Trophy */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] sm:w-[900px] sm:h-[900px] bg-[radial-gradient(circle,rgba(255,106,0,0.15)_0%,rgba(255,122,26,0.05)_45%,transparent_75%)] pointer-events-none blur-3xl -z-10" />
+    <section className="relative overflow-hidden border-b border-slate-200 bg-slate-50 py-24 sm:py-32">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Main Banner Box */}
-        <div className="bg-gradient-to-b from-[#1C1410] to-[#140E0A] border border-[rgba(255,179,107,0.25)] rounded-3xl p-8 sm:p-14 text-center relative overflow-hidden shadow-2xl space-y-10">
-          
-          {/* Header Label */}
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#211811] border border-[rgba(255,179,107,0.3)] text-xs font-mono font-bold tracking-wider text-[#FFB36B] uppercase">
-              <Trophy className="w-3.5 h-3.5 text-[#FF6A00]" />
-              <span>TOTAL PRIZE POOL & RECOGNITION</span>
-            </div>
+      {/* Decorative Background */}
+      <div className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-yellow-200/40 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-yellow-100/60 blur-3xl" />
 
-            {/* Oversized Typography */}
-            <div className="space-y-2">
-              <p className="text-4xl sm:text-6xl lg:text-7xl font-black font-display text-gradient-fire tracking-tight leading-none drop-shadow-md">
-                RP 50.000.000+
-              </p>
-              <p className="text-sm sm:text-base text-[#C4B3A7] max-w-xl mx-auto font-sans">
-                Total dana pembinaan tunai, trofi kejuaraan, sertifikat berstandar nasional, dan voucher cloud infrastructure bagi para inovator terbaik.
-              </p>
-            </div>
-          </div>
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-          {/* Prize Breakdown Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-left">
-            {PRIZE_BREAKDOWN.map((prize, idx) => (
-              <div
-                key={idx}
-                className="bg-[#211811] border border-[rgba(255,179,107,0.16)] hover:border-[#FF7A1A] rounded-2xl p-6 space-y-3 transition-all duration-200 group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-[#FF6A00] tracking-wider uppercase">
-                    {prize.badge}
-                  </span>
-                  <Award className="w-4 h-4 text-[#FFB36B] group-hover:scale-110 transition-transform" />
+        {/* Main Prize Banner */}
+        <div className="relative overflow-hidden rounded-[2rem] border border-yellow-200 bg-white p-8 shadow-sm sm:p-12 lg:p-14">
+
+          {/* Decorative Shapes */}
+          <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-yellow-100/80" />
+          <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-yellow-50" />
+
+          <div className="relative z-10 space-y-10">
+
+            {/* Header */}
+            <div className="mx-auto max-w-3xl space-y-5 text-center">
+
+              <div className="inline-flex items-center gap-2 rounded-full border border-yellow-200 bg-yellow-50 px-4 py-2 text-xs font-bold uppercase tracking-wider text-yellow-800">
+                <Trophy className="h-4 w-4 text-yellow-600" />
+                <span>Total Prize Pool & Recognition</span>
+              </div>
+
+              {/* Total Prize Pool */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-center gap-3">
+                  <Sparkles className="h-6 w-6 text-yellow-500 sm:h-8 sm:w-8" />
+
+                  <h2 className="text-4xl font-black tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+                    Rp 50 Juta+
+                  </h2>
+
+                  <Sparkles className="h-6 w-6 text-yellow-500 sm:h-8 sm:w-8" />
                 </div>
-                <h4 className="text-lg font-black font-display text-[#FFF7F0]">
-                  {prize.rank}
-                </h4>
-                <p className="text-xs font-semibold text-[#FFB36B]">
-                  {prize.reward}
-                </p>
-                <p className="text-xs text-[#948277] leading-relaxed">
-                  {prize.description}
+
+                <p className="mx-auto max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
+                  Total dana pembinaan tunai, trofi kejuaraan,
+                  sertifikat berstandar nasional, dan voucher cloud
+                  infrastructure bagi para inovator terbaik.
                 </p>
               </div>
-            ))}
-          </div>
 
-          {/* Action CTAs */}
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/register">
-              <Button variant="glow" size="lg" className="gap-2">
-                <span>Daftar Tim Sekarang</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-            <Link to="/competitions">
-              <Button variant="secondary" size="lg" className="gap-2">
-                <span>Rincian Hadiah Tiap Kategori</span>
-              </Button>
-            </Link>
-          </div>
+              {/* Small Highlight */}
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-medium text-slate-600">
+                  <Trophy className="h-4 w-4 text-yellow-600" />
+                  Hadiah Kompetisi
+                </div>
 
-          {/* Guarantee info */}
-          <div className="pt-2 flex items-center justify-center gap-2 text-xs text-[#948277] font-mono">
-            <ShieldCheck className="w-4 h-4 text-[#FF7A1A]" />
-            <span>Seluruh finalis dan peserta mendapatkan E-Certificate resmi bernomor registrasi nasional.</span>
-          </div>
+                <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-medium text-slate-600">
+                  <Award className="h-4 w-4 text-yellow-600" />
+                  Apresiasi Pemenang
+                </div>
+              </div>
+            </div>
 
+            {/* Prize Breakdown */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+              {PRIZE_BREAKDOWN.map((prize, idx) => (
+                <div
+                  key={idx}
+                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-yellow-400 hover:bg-white hover:shadow-lg"
+                >
+                  {/* Decorative Corner */}
+                  <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-yellow-100/70 transition-transform duration-300 group-hover:scale-125" />
+
+                  <div className="relative z-10 space-y-4">
+
+                    {/* Rank Badge */}
+                    <div className="flex items-center justify-between">
+                      <span className="rounded-lg border border-yellow-200 bg-yellow-50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-yellow-800">
+                        {prize.badge}
+                      </span>
+
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700 transition-colors group-hover:bg-yellow-400 group-hover:text-slate-950">
+                        <Award className="h-5 w-5" />
+                      </div>
+                    </div>
+
+                    {/* Prize Information */}
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-black text-slate-900">
+                        {prize.rank}
+                      </h3>
+
+                      <p className="text-sm font-bold text-yellow-700">
+                        {prize.reward}
+                      </p>
+
+                      <p className="text-xs leading-relaxed text-slate-500">
+                        {prize.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom Accent */}
+                    <div className="h-1 w-10 rounded-full bg-yellow-400 transition-all duration-300 group-hover:w-20" />
+
+                  </div>
+                </div>
+              ))}
+
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col items-center justify-center gap-4 pt-2 sm:flex-row">
+
+              <Link to="/register" className="w-full sm:w-auto">
+                <Button
+                  variant="glow"
+                  size="lg"
+                  className="flex w-full items-center justify-center gap-2 border-0 bg-yellow-400 text-slate-950 shadow-md transition-all hover:bg-yellow-300 sm:w-auto"
+                >
+                  <span>Daftar Tim Sekarang</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+
+              <Link to="/competitions" className="w-full sm:w-auto">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="flex w-full items-center justify-center gap-2 border border-slate-300 bg-white text-slate-700 hover:border-yellow-400 hover:bg-yellow-50 sm:w-auto"
+                >
+                  <span>Rincian Hadiah Tiap Kategori</span>
+                </Button>
+              </Link>
+
+            </div>
+
+            {/* Guarantee Information */}
+            <div className="flex flex-col items-center justify-center gap-2 border-t border-slate-100 pt-6 text-center sm:flex-row">
+              <ShieldCheck className="h-5 w-5 flex-shrink-0 text-yellow-600" />
+
+              <p className="text-xs leading-relaxed text-slate-500">
+                Seluruh finalis dan peserta mendapatkan E-Certificate
+                resmi bernomor registrasi nasional.
+              </p>
+            </div>
+
+          </div>
         </div>
-
       </div>
     </section>
   );

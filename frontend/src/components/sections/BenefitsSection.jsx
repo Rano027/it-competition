@@ -1,25 +1,76 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Cpu, Sparkles, Users, Rocket, Terminal, ArrowUpRight } from 'lucide-react';
+import {
+  Cpu,
+  Sparkles,
+  Users,
+  Rocket,
+  Terminal,
+  ArrowUpRight,
+} from 'lucide-react';
 import SectionHeading from '../ui/SectionHeading';
-import { BENEFITS_DATA } from '../../data/festivalData';
 
-const iconMap = {
-  Cpu: Cpu,
-  Sparkles: Sparkles,
-  Users: Users,
-  Rocket: Rocket,
-  Terminal: Terminal,
-};
+const benefits = [
+  {
+    number: '01',
+    category: 'TECHNICAL SKILL',
+    title: 'Akselerasi Keterampilan Teknis Nyata',
+    description:
+      'Tantangan dirancang menyerupai benchmark industri global. Uji keahlian rekayasa algoritma, arsitektur web modern, eksploitasi keamanan siber, dan analisis data cerdas dengan evaluasi langsung dari para praktisi senior.',
+    icon: Cpu,
+    size: 'md:col-span-7',
+    featured: true,
+  },
+  {
+    number: '02',
+    category: 'PORTFOLIO',
+    title: 'Portofolio Nasional Kredibel',
+    description:
+      'Karya dan pencapaian Anda terdokumentasi dalam rekam jejak resmi tingkat nasional, memperkuat portofolio bagi rekruter dan universitas terkemuka.',
+    icon: Sparkles,
+    size: 'md:col-span-5',
+  },
+  {
+    number: '03',
+    category: 'COLLABORATION',
+    title: 'Jejaring Kolaboratif',
+    description:
+      'Bangun relasi dengan ratusan talenta muda potensial, alumni berprestasi, dan komunitas pengembang se-Indonesia.',
+    icon: Users,
+    size: 'md:col-span-4',
+  },
+  {
+    number: '04',
+    category: 'REAL IMPACT',
+    title: 'Solusi Dampak Nyata',
+    description:
+      'Setiap tema lomba merespon kebutuhan riil transformasi kota cerdas, efisiensi data, dan ketahanan siber publik.',
+    icon: Rocket,
+    size: 'md:col-span-4',
+  },
+  {
+    number: '05',
+    category: 'TECHNOLOGY',
+    title: 'Wawasan Teknologi Terkini',
+    description:
+      'Dapatkan akses langsung ke metodologi pengembangan masa kini: AI tooling, secure code pipelines, dan scalable design systems.',
+    icon: Terminal,
+    size: 'md:col-span-4',
+  },
+];
 
 export const BenefitsSection = () => {
   return (
-    <section className="relative py-24 sm:py-32 bg-[#100B08] border-b border-[rgba(255,179,107,0.12)] overflow-hidden">
-      {/* Ambient Glow */}
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-[radial-gradient(circle,rgba(255,122,26,0.06)_0%,transparent_70%)] pointer-events-none blur-3xl -z-10" />
+    <section
+      className="relative overflow-hidden border-b border-slate-200 bg-white py-20 sm:py-24 lg:py-28"
+    >
+      {/* Decorative Background */}
+      <div className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-yellow-100/50 blur-3xl" />
+      <div className="pointer-events-none absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-yellow-200/30 blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        
+      <div className="relative z-10 mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:space-y-16 lg:px-8">
+
         {/* Section Heading */}
         <SectionHeading
           badge="// 02. WHY PARTICIPATE"
@@ -28,110 +79,84 @@ export const BenefitsSection = () => {
           description="Bukan sekadar ajang perlombaan, melainkan akselerator karir dan platform pembuktian kompetensi teknologi terstandarisasi."
         />
 
-        {/* Asymmetrical Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          
-          {/* Card 1: Technical Mastery (Large - 7 cols) */}
-          <div className="md:col-span-7 bg-[#1C1410] border border-[rgba(255,179,107,0.18)] rounded-3xl p-8 sm:p-10 relative overflow-hidden group hover:border-[#FF7A1A] transition-all duration-300">
-            <div className="flex items-center justify-between mb-8">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#FF6A00] to-[#FFB36B] flex items-center justify-center text-white shadow-orange-glow">
-                <Cpu className="w-6 h-6" />
-              </div>
-              <span className="font-mono text-xs text-[#FFB36B] tracking-wider uppercase bg-[#211811] px-3 py-1 rounded-full border border-[rgba(255,179,107,0.15)]">
-                [SYS-01 // TECHNICAL SKILL]
-              </span>
-            </div>
+        {/* Benefits Bento Grid */}
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-12">
 
-            <div className="space-y-3">
-              <h3 className="text-2xl sm:text-3xl font-black font-display text-[#FFF7F0] group-hover:text-[#FFB36B] transition-colors">
-                Akselerasi Keterampilan Teknis Nyata
-              </h3>
-              <p className="text-[#C4B3A7] text-base leading-relaxed font-sans max-w-xl">
-                Tantangan dirancang menyerupai benchmark industri global. Uji keahlian rekayasa algoritma, arsitektur web modern, eksploitasi keamanan siber, dan analisis data cerdas dengan evaluasi langsung dari para praktisi senior.
-              </p>
-            </div>
-          </div>
+          {benefits.map((benefit, index) => {
+            const Icon = benefit.icon;
 
-          {/* Card 2: Recognition & Portfolio (5 cols) */}
-          <div className="md:col-span-5 bg-[#17110D] border border-[rgba(255,179,107,0.18)] rounded-3xl p-8 relative overflow-hidden group hover:border-[#FF7A1A] transition-all duration-300">
-            <div className="flex items-center justify-between mb-8">
-              <div className="w-12 h-12 rounded-2xl bg-[#211811] border border-[rgba(255,179,107,0.25)] flex items-center justify-center text-[#FFB36B]">
-                <Sparkles className="w-6 h-6" />
-              </div>
-              <span className="font-mono text-xs text-[#948277] tracking-wider uppercase">
-                [SYS-02 // PORTFOLIO]
-              </span>
-            </div>
+            return (
+              <motion.div
+                key={benefit.number}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.1,
+                }}
+                className={`${benefit.size} group relative overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300 hover:bg-white hover:shadow-xl sm:p-8 ${
+                  benefit.featured ? 'md:p-10' : ''
+                }`}
+              >
+                {/* Decorative Circle */}
+                <div className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-yellow-100/50 transition-transform duration-500 group-hover:scale-150" />
 
-            <div className="space-y-3">
-              <h3 className="text-xl sm:text-2xl font-black font-display text-[#FFF7F0] group-hover:text-[#FFB36B] transition-colors">
-                Portofolio Nasional Kredibel
-              </h3>
-              <p className="text-[#C4B3A7] text-sm leading-relaxed font-sans">
-                Karya dan pencapaian Anda terdokumentasi dalam rekam jejak resmi tingkat nasional, memperkuat portofolio bagi rekruter dan universitas terkemuka.
-              </p>
-            </div>
-          </div>
+                <div className="relative z-10 flex h-full flex-col justify-between gap-8">
 
-          {/* Card 3: Elite Collaboration (4 cols) */}
-          <div className="md:col-span-4 bg-[#17110D] border border-[rgba(255,179,107,0.18)] rounded-3xl p-8 relative overflow-hidden group hover:border-[#FF7A1A] transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-10 h-10 rounded-xl bg-[#211811] border border-[rgba(255,179,107,0.25)] flex items-center justify-center text-[#FFB36B]">
-                <Users className="w-5 h-5" />
-              </div>
-              <span className="font-mono text-xs text-[#948277] uppercase">[SYS-03]</span>
-            </div>
+                  {/* Card Top */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-100 text-yellow-700 transition-all duration-300 group-hover:bg-yellow-400 group-hover:text-slate-950">
+                      <Icon className="h-6 w-6" />
+                    </div>
 
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold font-display text-[#FFF7F0] group-hover:text-[#FFB36B] transition-colors">
-                Jejaring Kolaboratif
-              </h3>
-              <p className="text-[#C4B3A7] text-sm leading-relaxed font-sans">
-                Bangun relasi dengan ratusan talenta muda potensial, alumni berprestasi, dan komunitas pengembang se-Indonesia.
-              </p>
-            </div>
-          </div>
+                    <div className="flex items-center gap-3">
+                      <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[10px] font-bold tracking-wider text-slate-500">
+                        {benefit.category}
+                      </span>
 
-          {/* Card 4: Real-World Impact (4 cols) */}
-          <div className="md:col-span-4 bg-[#1C1410] border border-[rgba(255,179,107,0.18)] rounded-3xl p-8 relative overflow-hidden group hover:border-[#FF7A1A] transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-10 h-10 rounded-xl bg-[#211811] border border-[rgba(255,179,107,0.25)] flex items-center justify-center text-[#FFB36B]">
-                <Rocket className="w-5 h-5" />
-              </div>
-              <span className="font-mono text-xs text-[#948277] uppercase">[SYS-04]</span>
-            </div>
+                      <span className="text-sm font-black text-slate-300">
+                        {benefit.number}
+                      </span>
+                    </div>
+                  </div>
 
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold font-display text-[#FFF7F0] group-hover:text-[#FFB36B] transition-colors">
-                Solusi Dampak Nyata
-              </h3>
-              <p className="text-[#C4B3A7] text-sm leading-relaxed font-sans">
-                Setiap tema lomba merespon kebutuhan riil transformasi kota cerdas, efisiensi data, dan ketahanan siber publik.
-              </p>
-            </div>
-          </div>
+                  {/* Card Content */}
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3
+                        className={`font-black leading-tight text-slate-900 transition-colors group-hover:text-yellow-700 ${
+                          benefit.featured
+                            ? 'max-w-xl text-2xl sm:text-3xl'
+                            : 'text-xl'
+                        }`}
+                      >
+                        {benefit.title}
+                      </h3>
 
-          {/* Card 5: Frontier Technology (4 cols) */}
-          <div className="md:col-span-4 bg-[#17110D] border border-[rgba(255,179,107,0.18)] rounded-3xl p-8 relative overflow-hidden group hover:border-[#FF7A1A] transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-10 h-10 rounded-xl bg-[#211811] border border-[rgba(255,179,107,0.25)] flex items-center justify-center text-[#FFB36B]">
-                <Terminal className="w-5 h-5" />
-              </div>
-              <span className="font-mono text-xs text-[#948277] uppercase">[SYS-05]</span>
-            </div>
+                      <ArrowUpRight className="mt-1 h-5 w-5 flex-shrink-0 text-slate-300 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-yellow-600" />
+                    </div>
 
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold font-display text-[#FFF7F0] group-hover:text-[#FFB36B] transition-colors">
-                Wawasan Teknologi Terkini
-              </h3>
-              <p className="text-[#C4B3A7] text-sm leading-relaxed font-sans">
-                Dapatkan akses langsung ke metodologi pengembangan masa kini: AI tooling, secure code pipelines, dan scalable design systems.
-              </p>
-            </div>
-          </div>
+                    <p
+                      className={`leading-relaxed text-slate-600 ${
+                        benefit.featured
+                          ? 'max-w-2xl text-base'
+                          : 'text-sm'
+                      }`}
+                    >
+                      {benefit.description}
+                    </p>
+                  </div>
+
+                  {/* Bottom Accent */}
+                  <div className="h-1 w-12 rounded-full bg-yellow-300 transition-all duration-300 group-hover:w-24 group-hover:bg-yellow-500" />
+
+                </div>
+              </motion.div>
+            );
+          })}
 
         </div>
-
       </div>
     </section>
   );

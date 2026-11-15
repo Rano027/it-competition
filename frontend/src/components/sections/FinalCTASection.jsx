@@ -1,59 +1,103 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, Terminal } from 'lucide-react';
-import Button from '../ui/Button';
+import {
+  ArrowRight,
+  Sparkles,
+  Rocket,
+  Trophy,
+} from 'lucide-react';
 
 export const FinalCTASection = () => {
   return (
-    <section className="relative py-28 sm:py-36 bg-[#100B08] overflow-hidden">
-      {/* Intense Cinematic Radial Lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[radial-gradient(ellipse,rgba(255,106,0,0.18)_0%,rgba(255,122,26,0.06)_50%,transparent_75%)] pointer-events-none blur-3xl -z-10" />
-      
-      {/* Background Matrix Linework */}
-      <div className="absolute inset-0 fest-grid-pattern opacity-40 pointer-events-none -z-10" />
+    <section className="relative overflow-hidden border-b border-slate-200 bg-slate-50 py-24 sm:py-32">
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-8">
-        
-        {/* Edition Pill */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1C1410] border border-[rgba(255,179,107,0.3)] shadow-[0_0_15px_rgba(255,106,0,0.15)] text-xs font-mono text-[#FFB36B]">
-          <Terminal className="w-3.5 h-3.5 text-[#FF6A00]" />
-          <span>JOIN THE FUTURE OF TECH // 2026</span>
+      {/* Background Decoration */}
+      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-yellow-200/40 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 -right-32 h-[450px] w-[450px] rounded-full bg-yellow-100/70 blur-3xl" />
+
+      {/* Main CTA Container */}
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+
+        <div className="relative overflow-hidden rounded-[2rem] border border-yellow-300 bg-white px-6 py-16 text-center shadow-xl shadow-yellow-100/50 sm:px-12 sm:py-20 lg:px-20">
+
+          {/* Decorative Shapes */}
+          <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-yellow-100/80" />
+          <div className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-yellow-50" />
+
+          <div className="relative z-10 space-y-8">
+
+            {/* Edition Pill */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-yellow-200 bg-yellow-50 px-4 py-2 text-xs font-bold tracking-wider text-yellow-800">
+              <Rocket className="h-4 w-4 text-yellow-600" />
+              <span>JOIN THE FUTURE OF TECH // 2026</span>
+            </div>
+
+            {/* Headline */}
+            <div className="space-y-3">
+              <h2 className="text-4xl font-black leading-[1.1] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+                YOUR NEXT BIG IDEA
+                <br />
+
+                <span className="relative inline-block text-yellow-600">
+                  STARTS HERE.
+                  <span className="absolute -bottom-1 left-0 h-2 w-full rounded-full bg-yellow-300/70" />
+                </span>
+              </h2>
+            </div>
+
+            {/* Description */}
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+              Jangan lewatkan kesempatan menguji kapabilitas,
+              memperluas wawasan inovasi, dan membawa pulang
+              total hadiah puluhan juta rupiah.
+            </p>
+
+            {/* Highlight Information */}
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+
+              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold text-slate-600">
+                <Trophy className="h-4 w-4 text-yellow-600" />
+                Total Hadiah Puluhan Juta
+              </div>
+
+              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold text-slate-600">
+                <Sparkles className="h-4 w-4 text-yellow-600" />
+                Kompetisi Nasional 2026
+              </div>
+
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col items-center justify-center gap-4 pt-3 sm:flex-row">
+
+              <Link
+                to="/register"
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 px-8 py-4 text-sm font-bold text-slate-950 shadow-lg shadow-yellow-200/70 transition-all duration-200 hover:-translate-y-1 hover:bg-yellow-300 hover:shadow-xl sm:w-auto"
+              >
+                <span>Daftar Sekarang</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+
+              <Link
+                to="/competitions"
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-8 py-4 text-sm font-bold text-slate-700 transition-all duration-200 hover:-translate-y-1 hover:border-yellow-400 hover:bg-yellow-50 sm:w-auto"
+              >
+                <Sparkles className="h-4 w-4 text-yellow-600" />
+                <span>Eksplorasi Cabang Lomba</span>
+              </Link>
+
+            </div>
+
+            {/* Registration Information */}
+            <div className="border-t border-slate-100 pt-8">
+              <p className="text-xs font-semibold tracking-wide text-slate-400">
+                REGISTRATION DEADLINE: 25 MARET 2026 // SLOTS LIMITED
+              </p>
+            </div>
+
+          </div>
         </div>
-
-        {/* Oversized Bold Headline */}
-        <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black font-display tracking-tight text-[#FFF7F0] leading-[1.08]">
-          YOUR NEXT BIG IDEA <br />
-          <span className="text-gradient-orange">
-            STARTS HERE.
-          </span>
-        </h2>
-
-        {/* Concise Description */}
-        <p className="text-base sm:text-lg text-[#C4B3A7] max-w-xl mx-auto font-sans leading-relaxed">
-          Jangan lewatkan kesempatan menguji kapabilitas, memperluas wawasan inovasi, dan membawa pulang total hadiah puluhan juta rupiah.
-        </p>
-
-        {/* Double CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <Link to="/register" className="w-full sm:w-auto">
-            <Button variant="glow" size="lg" className="w-full sm:w-auto gap-2 group">
-              <span>Daftar Sekarang</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
-          <Link to="/competitions" className="w-full sm:w-auto">
-            <Button variant="secondary" size="lg" className="w-full sm:w-auto gap-2">
-              <Sparkles className="w-4 h-4 text-[#FFB36B]" />
-              <span>Eksplorasi Cabang Lomba</span>
-            </Button>
-          </Link>
-        </div>
-
-        {/* Floating Telemetry Footer Tag */}
-        <div className="pt-8 text-xs font-mono text-[#948277]">
-          <span>REGISTRATION DEADLINE: 25 MARET 2026 // SLOTS LIMITED</span>
-        </div>
-
       </div>
     </section>
   );

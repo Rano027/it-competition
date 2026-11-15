@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Layers, Award, Terminal, Cpu } from 'lucide-react';
@@ -10,147 +11,176 @@ export const AboutSection = () => {
 
   const statIcons = [Layers, Award, Cpu, Terminal];
 
-  return (
-    <section id="about" className="relative py-24 sm:py-32 bg-[#17110D] border-b border-[rgba(255,179,107,0.12)] overflow-hidden">
-      {/* Background Ambient Glow */}
-      <div className="absolute top-1/2 left-0 w-80 h-80 bg-[radial-gradient(circle,rgba(255,106,0,0.08)_0%,transparent_70%)] pointer-events-none blur-3xl -z-10" />
+  const defaultStats = [
+    { value: '6+', label: 'Kompetisi Terbuka' },
+    { value: '80+', label: 'Institusi Partisipan' },
+    { value: 'Rp 45JT', label: 'Total Hadiah & Dana Hibah' },
+    { value: 'Ke-7', label: 'Tahun Penyelenggaraan' },
+  ];
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
-          {/* Left Column: Editorial Content (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] text-xs font-mono font-bold tracking-wider text-[#FFB36B] uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF6A00]" />
-              <span>{about.badge || '// 01. ABOUT THE EVENT'}</span>
+  const stats = about.stats?.length === 4
+    ? about.stats
+    : defaultStats;
+
+  const highlights = [
+    'Standar rubrik evaluasi oleh dewan juri pakar dan praktisi',
+    'Penyelenggaraan format hybrid untuk peserta seluruh Indonesia',
+    'Kesempatan belajar dan berjejaring dengan praktisi industri',
+  ];
+
+  return (
+    <section
+      id="about"
+      className="relative overflow-hidden border-b border-slate-200 bg-slate-50 py-20 sm:py-24 lg:py-28"
+    >
+      {/* Decorative Background */}
+      <div className="pointer-events-none absolute -left-32 top-20 h-80 w-80 rounded-full bg-yellow-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-yellow-100/40 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
+
+          {/* Left Column: About Content */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-6 lg:col-span-7"
+          >
+            {/* Section Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-600 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-yellow-400" />
+              {about.badge || '01. ABOUT THE EVENT'}
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-display tracking-tight text-[#FFF7F0] leading-tight">
-              {about.title ? (
-                about.title
-              ) : (
+            {/* Heading */}
+            <h2 className="max-w-3xl text-3xl font-black leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+              {about.title || (
                 <>
                   Mewadahi Inovasi Digital Generasi Muda Menuju{' '}
-                  <span className="text-gradient-orange">
-                    Masa Depan Teknologi.
+                  <span className="relative inline-block">
+                    <span className="relative z-10">
+                      Masa Depan Teknologi.
+                    </span>
+                    <span className="absolute bottom-1 left-0 -z-0 h-3 w-full bg-yellow-300 sm:h-4" />
                   </span>
                 </>
               )}
             </h2>
 
-            <p className="text-base sm:text-lg text-[#C4B3A7] leading-relaxed font-sans">
-              {about.story || 'HIMATIF IT Competition (NEXUS TechFest 2026) merupakan festival kompetisi teknologi informasi terbesar se-wilayah Cirebon, Indramayu, Majalengka, Kuningan (Ciayumajakuning) dan terbuka secara nasional.'}
+            {/* Main Description */}
+            <p className="max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+              {about.story ||
+                'HIMATIF IT Competition (NEXUS TechFest 2026) merupakan festival kompetisi teknologi informasi terbesar se-wilayah Cirebon, Indramayu, Majalengka, Kuningan (Ciayumajakuning) dan terbuka secara nasional.'}
             </p>
 
-            <p className="text-sm sm:text-base text-[#948277] leading-relaxed">
-              Dirancang untuk menjembatani ide-ide teoritis civitas akademika dengan tantangan nyata industri digital. Melalui kurasi standar profesional, peserta ditantang melampaui batasan dalam pemecahan algoritma, perancangan antarmuka, keamanan siber, dan rekayasa perangkat lunak.
+            <p className="max-w-2xl text-sm leading-relaxed text-slate-500 sm:text-base">
+              Dirancang untuk menjembatani ide-ide teoritis civitas akademika
+              dengan tantangan nyata industri digital. Melalui berbagai
+              kompetisi, peserta ditantang untuk mengembangkan kemampuan
+              pemecahan masalah, perancangan antarmuka, keamanan siber,
+              dan rekayasa perangkat lunak.
             </p>
 
-            {/* Pillar highlights */}
-            <div className="pt-4 space-y-3.5">
-              {[
-                'Standar rubrik evaluasi terakreditasi dewan juri pakar & praktisi',
-                'Penyelenggaraan format hybrid fleksibel bagi peserta seluruh nusantara',
-                'Sesi mentoring eksklusif dan bedah teknis bersama mentor industri',
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-start gap-3">
-                  <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-[#FF6A00]/15 flex items-center justify-center border border-[#FF6A00]/30 text-[#FFB36B]">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+            {/* Highlights */}
+            <div className="space-y-4 border-t border-slate-200 pt-6">
+              {highlights.map((item, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 text-yellow-700">
+                    <CheckCircle2 className="h-4 w-4" />
                   </div>
-                  <span className="text-sm sm:text-base text-[#FFF7F0] font-medium font-sans">
+
+                  <span className="text-sm font-medium leading-relaxed text-slate-700 sm:text-base">
                     {item}
                   </span>
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right Column: Editorial Stat Matrix & Technical Telemetry (5 cols) */}
-          <div className="lg:col-span-5">
-            <div className="bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden">
-              {/* Corner Tech Decorative Marker */}
-              <div className="absolute top-4 right-4 font-mono text-[10px] text-[#948277] tracking-widest uppercase">
-                [SYS_OVERVIEW]
-              </div>
+          {/* Right Column: Statistics */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="lg:col-span-5"
+          >
+            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
 
-              <div className="grid grid-cols-2 gap-4">
-                {about.stats && about.stats.length === 4 ? (
-                  about.stats.map((stat, sIdx) => {
-                    const IconComp = statIcons[sIdx] || Layers;
+              {/* Decorative Element */}
+              <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-yellow-100/80" />
+              <div className="absolute -bottom-16 -left-12 h-40 w-40 rounded-full bg-yellow-50" />
+
+              <div className="relative z-10 space-y-6">
+
+                {/* Card Heading */}
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-yellow-600">
+                      NEXUS ITC 2026
+                    </p>
+                    <h3 className="mt-2 text-xl font-extrabold text-slate-900 sm:text-2xl">
+                      Sekilas Tentang Kami
+                    </h3>
+                  </div>
+
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-400 text-xl font-black text-slate-900 shadow-sm">
+                    N
+                  </div>
+                </div>
+
+                <p className="text-sm leading-relaxed text-slate-500">
+                  Membangun ruang kolaborasi, kreativitas, dan inovasi
+                  teknologi bagi generasi muda Indonesia.
+                </p>
+
+                {/* Statistics Grid */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  {stats.map((stat, index) => {
+                    const IconComp = statIcons[index] || Layers;
+
                     return (
-                      <div key={sIdx} className="bg-[#211811] p-5 rounded-2xl border border-[rgba(255,179,107,0.12)] space-y-1">
-                        <div className="w-8 h-8 rounded-lg bg-[#FF6A00]/15 text-[#FFB36B] flex items-center justify-center mb-2">
-                          <IconComp className="w-4 h-4" />
+                      <div
+                        key={index}
+                        className="rounded-2xl border border-slate-200 bg-slate-50 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300 hover:bg-yellow-50/50 hover:shadow-md sm:p-5"
+                      >
+                        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700">
+                          <IconComp className="h-5 w-5" />
                         </div>
-                        <div className="text-2xl sm:text-3xl font-black font-display text-[#FFF7F0]">
+
+                        <div className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
                           {stat.value}
                         </div>
-                        <div className="text-xs text-[#948277] font-mono uppercase tracking-wider">
+
+                        <div className="mt-2 text-xs font-semibold leading-relaxed text-slate-500">
                           {stat.label}
                         </div>
                       </div>
                     );
-                  })
-                ) : (
-                  <>
-                    <div className="bg-[#211811] p-5 rounded-2xl border border-[rgba(255,179,107,0.12)] space-y-1">
-                      <div className="w-8 h-8 rounded-lg bg-[#FF6A00]/15 text-[#FFB36B] flex items-center justify-center mb-2">
-                        <Layers className="w-4 h-4" />
-                      </div>
-                      <div className="text-2xl sm:text-3xl font-black font-display text-[#FFF7F0]">
-                        6 Cabang
-                      </div>
-                      <div className="text-xs text-[#948277] font-mono uppercase tracking-wider">
-                        Lomba Pilihan
-                      </div>
-                    </div>
+                  })}
+                </div>
 
-                    <div className="bg-[#211811] p-5 rounded-2xl border border-[rgba(255,179,107,0.12)] space-y-1">
-                      <div className="w-8 h-8 rounded-lg bg-[#FF7A1A]/15 text-[#FFB36B] flex items-center justify-center mb-2">
-                        <Award className="w-4 h-4" />
-                      </div>
-                      <div className="text-2xl sm:text-3xl font-black font-display text-[#FFB36B]">
-                        Rp 50Jt+
-                      </div>
-                      <div className="text-xs text-[#948277] font-mono uppercase tracking-wider">
-                        Total Hadiah
-                      </div>
-                    </div>
+                {/* Organizer Information */}
+                <div className="flex flex-col gap-2 border-t border-slate-200 pt-5 text-xs sm:flex-row sm:items-center sm:justify-between">
+                  <span className="text-slate-500">
+                    Penyelenggara:{' '}
+                    <strong className="text-slate-800">
+                      {general.siteName
+                        ? general.siteName.split(' ')[0]
+                        : 'HIMATIF'}
+                    </strong>
+                  </span>
 
-                    <div className="bg-[#211811] p-5 rounded-2xl border border-[rgba(255,179,107,0.12)] space-y-1">
-                      <div className="w-8 h-8 rounded-lg bg-[#FFB36B]/15 text-[#FFB36B] flex items-center justify-center mb-2">
-                        <Cpu className="w-4 h-4" />
-                      </div>
-                      <div className="text-2xl sm:text-3xl font-black font-display text-[#FFF7F0]">
-                        2 Tingkat
-                      </div>
-                      <div className="text-xs text-[#948277] font-mono uppercase tracking-wider">
-                        Mahasiswa & SMA
-                      </div>
-                    </div>
+                  <span className="font-semibold text-yellow-700">
+                    {general.editionTag || 'Official Edition 2026'}
+                  </span>
+                </div>
 
-                    <div className="bg-[#211811] p-5 rounded-2xl border border-[rgba(255,179,107,0.12)] space-y-1">
-                      <div className="w-8 h-8 rounded-lg bg-[#FF6A00]/15 text-[#FFB36B] flex items-center justify-center mb-2">
-                        <Terminal className="w-4 h-4" />
-                      </div>
-                      <div className="text-2xl sm:text-3xl font-black font-display text-[#FFF7F0]">
-                        Hybrid
-                      </div>
-                      <div className="text-xs text-[#948277] font-mono uppercase tracking-wider">
-                        Pelaksanaan
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Verified Host Badge */}
-              <div className="pt-2 border-t border-[rgba(255,179,107,0.12)] flex items-center justify-between text-xs text-[#C4B3A7] font-mono">
-                <span>Penyelenggara: {general.siteName ? general.siteName.split(' ')[0] : 'HIMATIF'}</span>
-                <span className="text-[#FFB36B]">{general.editionTag || 'Official Edition 2026'}</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </div>
@@ -159,4 +189,3 @@ export const AboutSection = () => {
 };
 
 export default AboutSection;
-

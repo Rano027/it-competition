@@ -14,10 +14,10 @@ enum CompetitionCategory: string
     public function label(): string
     {
         return match ($this) {
-            self::UiUx => 'UI/UX Competition',
-            self::WebDevelopment => 'Web Development Competition',
-            self::Lkti => 'LKTI (Karya Tulis Ilmiah)',
-            self::Poster => 'Poster Competition',
+            self::UiUx => 'UI/UX Design',
+            self::WebDevelopment => 'Web Development',
+            self::Lkti => 'LKTI',
+            self::Poster => 'Desain Poster',
         };
     }
 

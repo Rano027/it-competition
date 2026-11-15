@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export const SectionHeading = ({
@@ -5,31 +6,42 @@ export const SectionHeading = ({
   title = '',
   highlight = '',
   description = '',
-  align = 'center', // 'center' | 'left'
+  align = 'center',
   className = '',
 }) => {
   const isCenter = align === 'center';
 
   return (
-    <div className={`space-y-4 ${isCenter ? 'text-center max-w-3xl mx-auto' : 'max-w-2xl'} ${className}`}>
+    <div
+      className={`space-y-4 ${
+        isCenter ? 'mx-auto max-w-3xl text-center' : 'max-w-2xl'
+      } ${className}`}
+    >
+      {/* Badge */}
       {badge && (
-        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] text-xs font-bold font-mono tracking-wider text-[#FFB36B] uppercase ${isCenter ? 'mx-auto' : ''}`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#FF6A00] animate-pulse"></span>
+        <div
+          className={`inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold tracking-wider text-slate-600 shadow-sm ${
+            isCenter ? 'mx-auto' : ''
+          }`}
+        >
+          <span className="h-2 w-2 rounded-full bg-yellow-400" />
           <span>{badge}</span>
         </div>
       )}
 
-      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-display tracking-tight text-[#FFF7F0] leading-tight">
+      {/* Heading */}
+      <h2 className="text-3xl font-black leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
         {title}{' '}
         {highlight && (
-          <span className="text-gradient-orange">
+          <span className="text-yellow-600">
             {highlight}
           </span>
         )}
       </h2>
 
+      {/* Description */}
       {description && (
-        <p className="text-base sm:text-lg text-[#C4B3A7] leading-relaxed font-sans">
+        <p className="text-base leading-relaxed text-slate-600 sm:text-lg">
           {description}
         </p>
       )}

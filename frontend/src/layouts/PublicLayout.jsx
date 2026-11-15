@@ -5,11 +5,13 @@ import Footer from '../components/common/Footer';
 
 export const PublicLayout = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-[#100B08] text-[#FFF7F0] selection:bg-[#FF6A00] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 selection:bg-yellow-400 selection:text-slate-950">
       <Navbar />
-      <main className="flex-1">
+
+      <main className="flex-1 bg-white">
         <Outlet />
       </main>
+
       <Footer />
     </div>
   );

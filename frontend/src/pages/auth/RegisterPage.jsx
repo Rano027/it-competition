@@ -1,6 +1,18 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff, User, Mail, School, Hash, Lock, ArrowRight, ShieldCheck, Terminal } from 'lucide-react';
+import {
+  Eye,
+  EyeOff,
+  User,
+  Mail,
+  School,
+  Hash,
+  Lock,
+  ArrowRight,
+  ShieldCheck,
+} from 'lucide-react';
+
 import useAuth from '../../hooks/useAuth';
 import Button from '../../components/ui/Button';
 
@@ -8,6 +20,7 @@ export const RegisterPage = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
   const preselectedCompetition = searchParams.get('competition');
 
   const [formData, setFormData] = useState({
@@ -28,31 +41,43 @@ export const RegisterPage = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
+
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: null }));
+      setErrors((prev) => ({
+        ...prev,
+        [name]: null,
+      }));
     }
   };
 
   const validate = () => {
     const errs = {};
-    if (!formData.name.trim()) errs.name = 'Nama lengkap wajib diisi.';
-    
+
+    if (!formData.name.trim()) {
+      errs.name = 'Nama lengkap wajib diisi.';
+    }
+
     if (!formData.email.trim()) {
       errs.email = 'Alamat email wajib diisi.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+    } else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())
+    ) {
       errs.email = 'Format alamat email tidak valid.';
     }
 
     if (!formData.studentId.trim()) {
-      errs.studentId = 'Nomor Identitas Mahasiswa / Pelajar (NIM/NISN) wajib diisi.';
+      errs.studentId =
+        'Nomor Identitas Mahasiswa / Pelajar (NIM/NISN) wajib diisi.';
     }
 
     if (!formData.institution.trim()) {
-      errs.institution = 'Asal perguruan tinggi atau sekolah wajib diisi.';
+      errs.institution =
+        'Asal perguruan tinggi atau sekolah wajib diisi.';
     }
 
     if (!formData.password) {
@@ -66,7 +91,8 @@ export const RegisterPage = () => {
     }
 
     if (!formData.termsAccepted) {
-      errs.termsAccepted = 'Anda harus menyetujui syarat & ketentuan perlombaan.';
+      errs.termsAccepted =
+        'Anda harus menyetujui syarat & ketentuan perlombaan.';
     }
 
     setErrors(errs);
@@ -90,273 +116,364 @@ export const RegisterPage = () => {
         password: formData.password,
       });
 
-      // Redirect directly to participant dashboard
       navigate('/participant/dashboard', { replace: true });
     } catch (err) {
       setServerError(
         err.response?.data?.message ||
-        err.message ||
-        'Pendaftaran gagal. Silakan periksa kembali data Anda.'
+          err.message ||
+          'Pendaftaran gagal. Silakan periksa kembali data Anda.'
       );
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-[#100B08] text-[#FFF7F0] flex flex-col justify-center relative overflow-hidden py-12">
-      {/* Ambient Lighting */}
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[radial-gradient(circle,rgba(255,106,0,0.12)_0%,transparent_70%)] pointer-events-none blur-3xl -z-10" />
-      <div className="absolute inset-0 fest-grid-pattern opacity-30 pointer-events-none -z-10" />
+  const inputClass = (field) =>
+    `w-full text-sm pl-10 pr-4 py-3 rounded-xl bg-white border ${
+      errors[field]
+        ? 'border-rose-400'
+        : 'border-slate-200 hover:border-yellow-400'
+    } text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 focus:border-yellow-500 transition-all`;
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
-          {/* Left Column: Branding Artwork (Desktop) */}
-          <div className="hidden lg:block lg:col-span-5 space-y-6 pr-4">
+  const labelClass =
+    'text-xs font-semibold text-slate-600 uppercase tracking-wide block';
+
+  const iconClass =
+    'w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2';
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col justify-center relative overflow-hidden py-12">
+      {/* Background Decoration */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-200/30 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+
+          {/* Left Column */}
+          <div className="hidden lg:block lg:col-span-5 space-y-8 pr-4">
             <Link to="/" className="inline-flex items-center space-x-3 group">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#FF6A00] to-[#FFB36B] flex items-center justify-center text-white font-black text-2xl shadow-orange-glow group-hover:scale-105 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-yellow-400 flex items-center justify-center text-slate-900 font-black text-2xl shadow-md group-hover:scale-105 transition-transform">
                 N
               </div>
+
               <div>
-                <span className="text-2xl font-black tracking-tight text-[#FFF7F0] block leading-tight font-display">
-                  NEXUS <span className="text-[#FF6A00]">ITC</span>
+                <span className="text-2xl font-black tracking-tight text-slate-900 block leading-tight">
+                  NEXUS <span className="text-yellow-600">ITC</span>
                 </span>
-                <span className="text-xs font-mono text-[#FFB36B] uppercase tracking-wider block">
+
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
                   EDITION 2026 // REGISTRATION
                 </span>
               </div>
             </Link>
 
-            <div className="space-y-3">
-              <h1 className="text-3xl sm:text-4xl font-black font-display tracking-tight text-[#FFF7F0] leading-tight">
-                Mulai Perjalanan <br />
-                <span className="text-gradient-orange">
+            <div className="space-y-4">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-bold">
+                <ShieldCheck className="w-4 h-4" />
+                REGISTRASI PESERTA
+              </span>
+
+              <h1 className="text-4xl xl:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+                Mulai Perjalanan
+                <br />
+                <span className="text-yellow-600">
                   Kompetisi Digital Anda.
                 </span>
               </h1>
-              <p className="text-sm text-[#C4B3A7] leading-relaxed font-sans">
-                Buat akun peserta resmi untuk mendaftarkan tim, memilih cabang lomba, mengunggah karya, dan memantau status evaluasi secara real-time.
+
+              <p className="text-base text-slate-600 leading-relaxed">
+                Buat akun peserta resmi untuk mendaftarkan tim, memilih
+                cabang lomba, mengunggah karya, dan memantau status evaluasi
+                secara real-time.
               </p>
             </div>
 
             {preselectedCompetition && (
-              <div className="p-4 rounded-2xl bg-[#1C1410] border border-[#FF7A1A]/40 space-y-1">
-                <span className="text-[11px] font-mono text-[#FFB36B] uppercase block">
-                  Cabang Lomba Terpilih:
+              <div className="p-5 rounded-2xl bg-yellow-50 border border-yellow-200 space-y-2">
+                <span className="text-xs font-bold text-yellow-700 uppercase tracking-wide">
+                  Cabang Lomba Terpilih
                 </span>
-                <p className="text-sm font-bold text-[#FFF7F0]">
+
+                <p className="text-base font-bold text-slate-800">
                   {preselectedCompetition}
                 </p>
               </div>
             )}
 
-            <div className="p-5 rounded-2xl bg-[#1C1410] border border-[rgba(255,179,107,0.18)] text-xs text-[#948277] font-mono space-y-2">
-              <p className="text-[#FFB36B] font-semibold flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-[#FF6A00]" />
-                <span>PANDUAN KEPESERTAAN</span>
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+              <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-yellow-600" />
+                Panduan Kepesertaan
               </p>
-              <p>• Pendaftaran akun publik otomatis berstatus peran Peserta (Participant).</p>
-              <p>• Data akun tersimpan aman pada sesi browser prototipe.</p>
-              <p>• Anggota tim dapat ditambahkan setelah akun ketua tim aktif.</p>
+
+              <div className="space-y-3 text-sm text-slate-600">
+                <p className="flex gap-3">
+                  <span className="text-yellow-600 font-bold">01.</span>
+                  Pendaftaran akun publik otomatis berstatus Peserta.
+                </p>
+
+                <p className="flex gap-3">
+                  <span className="text-yellow-600 font-bold">02.</span>
+                  Data akun tersimpan pada sesi browser prototipe.
+                </p>
+
+                <p className="flex gap-3">
+                  <span className="text-yellow-600 font-bold">03.</span>
+                  Anggota tim dapat ditambahkan setelah akun ketua tim aktif.
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Right Column: Registration Form */}
           <div className="lg:col-span-7 max-w-xl w-full mx-auto">
+
             {/* Mobile Header */}
-            <div className="lg:hidden text-center mb-6 space-y-1">
-              <Link to="/" className="inline-flex items-center space-x-2">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FF6A00] to-[#FFB36B] flex items-center justify-center text-white font-bold text-lg shadow-orange-glow">
+            <div className="lg:hidden text-center mb-6">
+              <Link to="/" className="inline-flex items-center gap-2">
+                <div className="w-10 h-10 rounded-xl bg-yellow-400 flex items-center justify-center text-slate-900 font-black text-xl shadow-sm">
                   N
                 </div>
-                <span className="text-lg font-bold font-display text-[#FFF7F0]">
-                  NEXUS <span className="text-[#FF6A00]">ITC</span>
+
+                <span className="text-xl font-bold text-slate-900">
+                  NEXUS <span className="text-yellow-600">ITC</span>
                 </span>
               </Link>
             </div>
 
-            <div className="bg-[#1C1410] border border-[rgba(255,179,107,0.22)] rounded-3xl p-7 sm:p-9 shadow-2xl space-y-6">
-              <div className="space-y-1">
-                <h2 className="text-2xl sm:text-3xl font-black font-display text-[#FFF7F0] tracking-tight">
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-9 shadow-xl shadow-slate-200/60 space-y-6">
+
+              {/* Form Heading */}
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-yellow-700 uppercase tracking-wider">
+                  Create Your Account
+                </span>
+
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                   Pendaftaran Peserta
                 </h2>
-                <p className="text-xs sm:text-sm text-[#C4B3A7]">
+
+                <p className="text-sm text-slate-500">
                   Lengkapi data diri ketua tim untuk membuat akun kompetisi.
                 </p>
               </div>
 
+              {/* Server Error */}
               {serverError && (
-                <div className="p-3.5 rounded-xl bg-red-950/60 border border-red-800/60 text-red-300 text-xs">
+                <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
                   {serverError}
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Full name */}
-                <div className="space-y-1">
-                  <label className="text-xs font-mono font-semibold text-[#C4B3A7] uppercase block">
+              <form onSubmit={handleSubmit} className="space-y-5">
+
+                {/* Full Name */}
+                <div className="space-y-2">
+                  <label className={labelClass}>
                     Nama Lengkap
                   </label>
+
                   <div className="relative">
-                    <User className="w-4 h-4 text-[#948277] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <User className={iconClass} />
+
                     <input
                       type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="Contoh: Budi Santoso"
-                      className={`w-full text-sm pl-10 pr-3.5 py-2.5 rounded-xl bg-[#211811] border ${
-                        errors.name ? 'border-rose-500' : 'border-[rgba(255,179,107,0.2)]'
-                      } text-[#FFF7F0] placeholder-[#948277] focus:outline-none focus:ring-1 focus:ring-[#FFC58A]`}
+                      className={inputClass('name')}
                     />
                   </div>
-                  {errors.name && <p className="text-[11px] text-rose-400 font-sans">{errors.name}</p>}
+
+                  {errors.name && (
+                    <p className="text-xs text-rose-500">{errors.name}</p>
+                  )}
                 </div>
 
-                {/* Email address */}
-                <div className="space-y-1">
-                  <label className="text-xs font-mono font-semibold text-[#C4B3A7] uppercase block">
+                {/* Email */}
+                <div className="space-y-2">
+                  <label className={labelClass}>
                     Alamat Email Aktif
                   </label>
+
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-[#948277] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Mail className={iconClass} />
+
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="nama@email.com"
-                      className={`w-full text-sm pl-10 pr-3.5 py-2.5 rounded-xl bg-[#211811] border ${
-                        errors.email ? 'border-rose-500' : 'border-[rgba(255,179,107,0.2)]'
-                      } text-[#FFF7F0] placeholder-[#948277] focus:outline-none focus:ring-1 focus:ring-[#FFC58A]`}
+                      className={inputClass('email')}
                     />
                   </div>
-                  {errors.email && <p className="text-[11px] text-rose-400 font-sans">{errors.email}</p>}
+
+                  {errors.email && (
+                    <p className="text-xs text-rose-500">{errors.email}</p>
+                  )}
                 </div>
 
-                {/* Two-Column: Student ID & Institution */}
+                {/* Student ID & Institution */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-mono font-semibold text-[#C4B3A7] uppercase block">
-                      NIM / NISN Identitas
+                  <div className="space-y-2">
+                    <label className={labelClass}>
+                      NIM / NISN
                     </label>
+
                     <div className="relative">
-                      <Hash className="w-4 h-4 text-[#948277] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Hash className={iconClass} />
+
                       <input
                         type="text"
                         name="studentId"
                         value={formData.studentId}
                         onChange={handleChange}
                         placeholder="Contoh: 2301010045"
-                        className={`w-full text-sm pl-10 pr-3.5 py-2.5 rounded-xl bg-[#211811] border ${
-                          errors.studentId ? 'border-rose-500' : 'border-[rgba(255,179,107,0.2)]'
-                        } text-[#FFF7F0] placeholder-[#948277] focus:outline-none focus:ring-1 focus:ring-[#FFC58A]`}
+                        className={inputClass('studentId')}
                       />
                     </div>
-                    {errors.studentId && <p className="text-[11px] text-rose-400 font-sans">{errors.studentId}</p>}
+
+                    {errors.studentId && (
+                      <p className="text-xs text-rose-500">
+                        {errors.studentId}
+                      </p>
+                    )}
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-mono font-semibold text-[#C4B3A7] uppercase block">
+                  <div className="space-y-2">
+                    <label className={labelClass}>
                       Sekolah / Universitas
                     </label>
+
                     <div className="relative">
-                      <School className="w-4 h-4 text-[#948277] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <School className={iconClass} />
+
                       <input
                         type="text"
                         name="institution"
                         value={formData.institution}
                         onChange={handleChange}
-                        placeholder="Contoh: Universitas Gunung Jati"
-                        className={`w-full text-sm pl-10 pr-3.5 py-2.5 rounded-xl bg-[#211811] border ${
-                          errors.institution ? 'border-rose-500' : 'border-[rgba(255,179,107,0.2)]'
-                        } text-[#FFF7F0] placeholder-[#948277] focus:outline-none focus:ring-1 focus:ring-[#FFC58A]`}
+                        placeholder="Nama institusi"
+                        className={inputClass('institution')}
                       />
                     </div>
-                    {errors.institution && <p className="text-[11px] text-rose-400 font-sans">{errors.institution}</p>}
+
+                    {errors.institution && (
+                      <p className="text-xs text-rose-500">
+                        {errors.institution}
+                      </p>
+                    )}
                   </div>
                 </div>
 
-                {/* Two-Column: Password & Confirm Password */}
+                {/* Password & Confirmation */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-mono font-semibold text-[#C4B3A7] uppercase block">
+                  <div className="space-y-2">
+                    <label className={labelClass}>
                       Kata Sandi
                     </label>
+
                     <div className="relative">
-                      <Lock className="w-4 h-4 text-[#948277] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Lock className={iconClass} />
+
                       <input
                         type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
                         placeholder="Min. 6 karakter"
-                        className={`w-full text-sm pl-10 pr-9 py-2.5 rounded-xl bg-[#211811] border ${
-                          errors.password ? 'border-rose-500' : 'border-[rgba(255,179,107,0.2)]'
-                        } text-[#FFF7F0] placeholder-[#948277] focus:outline-none focus:ring-1 focus:ring-[#FFC58A]`}
+                        className="w-full text-sm pl-10 pr-11 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 focus:border-yellow-500 transition-all"
                       />
+
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#948277] hover:text-[#FFF7F0]"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-yellow-600 transition-colors"
                       >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {showPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
                       </button>
                     </div>
-                    {errors.password && <p className="text-[11px] text-rose-400 font-sans">{errors.password}</p>}
+
+                    {errors.password && (
+                      <p className="text-xs text-rose-500">
+                        {errors.password}
+                      </p>
+                    )}
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-mono font-semibold text-[#C4B3A7] uppercase block">
-                      Ulangi Sandi
+                  <div className="space-y-2">
+                    <label className={labelClass}>
+                      Ulangi Kata Sandi
                     </label>
+
                     <div className="relative">
-                      <Lock className="w-4 h-4 text-[#948277] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Lock className={iconClass} />
+
                       <input
                         type={showConfirmPassword ? 'text' : 'password'}
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         placeholder="Ulangi sandi"
-                        className={`w-full text-sm pl-10 pr-9 py-2.5 rounded-xl bg-[#211811] border ${
-                          errors.confirmPassword ? 'border-rose-500' : 'border-[rgba(255,179,107,0.2)]'
-                        } text-[#FFF7F0] placeholder-[#948277] focus:outline-none focus:ring-1 focus:ring-[#FFC58A]`}
+                        className="w-full text-sm pl-10 pr-11 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 focus:border-yellow-500 transition-all"
                       />
+
                       <button
                         type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#948277] hover:text-[#FFF7F0]"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-yellow-600 transition-colors"
                       >
-                        {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {showConfirmPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
                       </button>
                     </div>
+
                     {errors.confirmPassword && (
-                      <p className="text-[11px] text-rose-400 font-sans">{errors.confirmPassword}</p>
+                      <p className="text-xs text-rose-500">
+                        {errors.confirmPassword}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 {/* Terms and Conditions */}
-                <div className="pt-1 space-y-1">
-                  <label className="flex items-start gap-2.5 text-xs text-[#C4B3A7] cursor-pointer">
+                <div className="pt-1 space-y-2">
+                  <label className="flex items-start gap-3 text-sm text-slate-600 cursor-pointer">
                     <input
                       type="checkbox"
                       name="termsAccepted"
                       checked={formData.termsAccepted}
                       onChange={handleChange}
-                      className="mt-0.5 rounded border-[rgba(255,179,107,0.2)] bg-[#211811] text-[#FF6A00] focus:ring-[#FFC58A]"
+                      className="mt-0.5 w-4 h-4 rounded border-slate-300 text-yellow-500 focus:ring-yellow-400"
                     />
+
                     <span>
-                      Saya menyetujui seluruh ketentuan lomba, tata tertib kompetisi, dan keaslian karya yang diajukan pada HIMATIF ITC 2026.
+                      Saya menyetujui seluruh ketentuan lomba, tata tertib
+                      kompetisi, dan keaslian karya yang diajukan pada
+                      HIMATIF ITC 2026.
                     </span>
                   </label>
+
                   {errors.termsAccepted && (
-                    <p className="text-[11px] text-rose-400 font-sans">{errors.termsAccepted}</p>
+                    <p className="text-xs text-rose-500">
+                      {errors.termsAccepted}
+                    </p>
                   )}
                 </div>
 
-                {/* Submit button */}
+                {/* Submit Button */}
                 <Button
                   type="submit"
                   variant="glow"
@@ -368,19 +485,24 @@ export const RegisterPage = () => {
                 </Button>
               </form>
 
-              {/* Link back to Login */}
-              <div className="text-center pt-2">
-                <p className="text-xs text-[#948277]">
+              {/* Login Link */}
+              <div className="text-center pt-3 border-t border-slate-100">
+                <p className="text-sm text-slate-500">
                   Sudah memiliki akun?{' '}
-                  <Link to="/login" className="text-[#FF6A00] hover:underline font-semibold">
+                  <Link
+                    to="/login"
+                    className="text-yellow-700 hover:text-yellow-800 font-bold transition-colors"
+                  >
                     Masuk ke sini
                   </Link>
                 </p>
               </div>
-
             </div>
-          </div>
 
+            <p className="text-center text-xs text-slate-400 mt-5">
+              NEXUS ITC 2026 · Official Participant Registration
+            </p>
+          </div>
         </div>
       </div>
     </div>

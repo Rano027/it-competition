@@ -1,40 +1,61 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, CheckCircle, Clock, ArrowRight } from 'lucide-react';
+import { Calendar, CheckCircle, Clock } from 'lucide-react';
 import SectionHeading from '../ui/SectionHeading';
 import { TIMELINE_STAGES } from '../../data/festivalData';
 
 export const TimelineSection = () => {
   const [activeStep, setActiveStep] = useState(0);
 
-  return (
-    <section id="timeline" className="relative py-24 sm:py-32 bg-[#100B08] border-b border-[rgba(255,179,107,0.12)] overflow-hidden">
-      {/* Background Lighting */}
-      <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-[radial-gradient(circle,rgba(255,106,0,0.07)_0%,transparent_70%)] pointer-events-none blur-3xl -z-10" />
+  const activeStage = TIMELINE_STAGES[activeStep];
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        
+  return (
+    <section
+      id="timeline"
+      className="relative overflow-hidden border-b border-slate-200 bg-white py-24 sm:py-32"
+    >
+      {/* Decorative Background */}
+      <div className="pointer-events-none absolute -right-32 top-20 h-96 w-96 rounded-full bg-yellow-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-yellow-100/50 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-7xl space-y-16 px-4 sm:px-6 lg:px-8">
+
         {/* Section Heading */}
         <SectionHeading
           badge="// 04. TIMELINE"
           title="Jadwal & Milestone"
           highlight="Pelaksanaan 2026"
-          description="Rangkaian tahapan resmi kompetisi mulai dari pembukaan pendaftaran hingga malam penganugerahan pemenang."
+          description="Ikuti rangkaian tahapan resmi kompetisi, mulai dari pembukaan pendaftaran hingga malam penganugerahan pemenang."
         />
 
-        {/* 1. Desktop Interactive Step Navigator & Detail Card */}
-        <div className="hidden lg:block space-y-10">
-          
-          {/* Horizontal Step Indicator Bar */}
-          <div className="relative">
-            {/* Progress Connecting Line */}
-            <div className="absolute top-6 left-12 right-12 h-0.5 bg-[rgba(255,179,107,0.2)] -z-0" />
-            <div 
-              className="absolute top-6 left-12 h-0.5 bg-gradient-to-r from-[#FF6A00] to-[#FFB36B] transition-all duration-500 -z-0" 
-              style={{ width: `${(activeStep / (TIMELINE_STAGES.length - 1)) * 88}%` }}
+        {/* Desktop Interactive Timeline */}
+        <div className="hidden space-y-10 lg:block">
+
+          {/* Timeline Navigation */}
+          <div className="relative px-6">
+
+            {/* Connecting Line */}
+            <div className="absolute left-12 right-12 top-6 h-1 rounded-full bg-slate-200" />
+
+            {/* Progress Line */}
+            <div
+              className="absolute left-12 top-6 h-1 rounded-full bg-yellow-400 transition-all duration-500"
+              style={{
+                width: `${
+                  TIMELINE_STAGES.length > 1
+                    ? (activeStep / (TIMELINE_STAGES.length - 1)) * 88
+                    : 0
+                }%`,
+              }}
             />
 
-            <div className="grid grid-cols-6 gap-2 relative z-10">
+            <div
+              className="relative z-10 grid gap-3"
+              style={{
+                gridTemplateColumns: `repeat(${TIMELINE_STAGES.length}, minmax(0, 1fr))`,
+              }}
+            >
               {TIMELINE_STAGES.map((stage, idx) => {
                 const isActive = activeStep === idx;
                 const isCurrent = stage.status === 'current';
@@ -43,29 +64,34 @@ export const TimelineSection = () => {
                   <button
                     key={stage.step}
                     onClick={() => setActiveStep(idx)}
-                    className="flex flex-col items-center text-center group focus:outline-none"
+                    className="group flex flex-col items-center text-center focus:outline-none"
                   >
-                    {/* Circle Node */}
-                    <div 
-                      className={`w-12 h-12 rounded-2xl flex items-center justify-center font-mono font-bold text-sm transition-all duration-300 ${
+                    {/* Timeline Node */}
+                    <div
+                      className={`flex h-12 w-12 items-center justify-center rounded-2xl border-2 text-sm font-bold transition-all duration-300 ${
                         isActive
-                          ? 'bg-[#FF6A00] text-white shadow-orange-glow scale-110 border-2 border-white/40'
+                          ? 'scale-110 border-yellow-400 bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-200'
                           : isCurrent
-                          ? 'bg-[#211811] text-[#FFB36B] border-2 border-[#FF7A1A]'
-                          : 'bg-[#1C1410] text-[#948277] border border-[rgba(255,179,107,0.2)] group-hover:border-[#FF7A1A]'
+                          ? 'border-yellow-400 bg-yellow-50 text-yellow-700'
+                          : 'border-slate-200 bg-white text-slate-400 group-hover:border-yellow-400 group-hover:text-yellow-700'
                       }`}
                     >
                       {stage.step}
                     </div>
 
-                    {/* Step Title Label */}
-                    <div className="mt-3 space-y-1">
-                      <p className={`text-xs font-bold leading-tight transition-colors line-clamp-1 ${
-                        isActive ? 'text-[#FFB36B]' : 'text-[#C4B3A7] group-hover:text-[#FFF7F0]'
-                      }`}>
+                    {/* Stage Information */}
+                    <div className="mt-4 space-y-1">
+                      <p
+                        className={`line-clamp-2 text-xs font-bold transition-colors ${
+                          isActive
+                            ? 'text-yellow-700'
+                            : 'text-slate-700 group-hover:text-yellow-700'
+                        }`}
+                      >
                         {stage.title}
                       </p>
-                      <span className="text-[10px] font-mono text-[#948277] block">
+
+                      <span className="block text-[10px] text-slate-400">
                         {stage.dates}
                       </span>
                     </div>
@@ -75,48 +101,68 @@ export const TimelineSection = () => {
             </div>
           </div>
 
-          {/* Detailed Stage Card for Active Step */}
-          {TIMELINE_STAGES[activeStep] && (
+          {/* Active Stage Detail */}
+          {activeStage && (
             <motion.div
               key={activeStep}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-[#1C1410] border border-[rgba(255,179,107,0.22)] rounded-3xl p-8 sm:p-10 shadow-xl relative overflow-hidden"
+              className="relative overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 p-8 shadow-sm sm:p-10"
             >
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                
-                <div className="md:col-span-8 space-y-4">
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-xs font-bold text-[#FF6A00] uppercase tracking-wider bg-[#211811] px-3 py-1 rounded-full border border-[rgba(255,179,107,0.2)]">
-                      STAGE {TIMELINE_STAGES[activeStep].step}
+              {/* Decorative Circle */}
+              <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-yellow-100/70" />
+
+              <div className="relative z-10 grid grid-cols-1 items-center gap-8 md:grid-cols-12">
+
+                {/* Stage Description */}
+                <div className="space-y-4 md:col-span-8">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="rounded-full border border-yellow-200 bg-yellow-100 px-3 py-1.5 text-xs font-bold text-yellow-800">
+                      TAHAP {activeStage.step}
                     </span>
-                    <span className="flex items-center gap-1.5 text-xs text-[#FFB36B] font-mono">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>{TIMELINE_STAGES[activeStep].dates}</span>
+
+                    <span className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+                      <Calendar className="h-4 w-4 text-yellow-600" />
+                      {activeStage.dates}
                     </span>
+
+                    {activeStage.status === 'current' && (
+                      <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-semibold text-emerald-700">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                        Sedang Berlangsung
+                      </span>
+                    )}
                   </div>
 
-                  <h3 className="text-2xl sm:text-3xl font-black font-display text-[#FFF7F0]">
-                    {TIMELINE_STAGES[activeStep].title}
+                  <h3 className="text-2xl font-black leading-tight text-slate-900 sm:text-3xl">
+                    {activeStage.title}
                   </h3>
-                  <p className="text-sm font-semibold text-[#FFB36B]">
-                    {TIMELINE_STAGES[activeStep].subtitle}
+
+                  <p className="font-semibold text-yellow-700">
+                    {activeStage.subtitle}
                   </p>
-                  <p className="text-[#C4B3A7] text-base leading-relaxed font-sans max-w-2xl">
-                    {TIMELINE_STAGES[activeStep].description}
+
+                  <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
+                    {activeStage.description}
                   </p>
                 </div>
 
-                <div className="md:col-span-4 bg-[#211811] p-6 rounded-2xl border border-[rgba(255,179,107,0.15)] space-y-3">
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFB36B]">
-                    Fokus Aktivitas:
+                {/* Activity Highlights */}
+                <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 md:col-span-4">
+                  <h4 className="flex items-center gap-2 text-sm font-bold text-slate-900">
+                    <Clock className="h-4 w-4 text-yellow-600" />
+                    Fokus Aktivitas
                   </h4>
-                  <ul className="space-y-2 text-xs text-[#FFF7F0]">
-                    {TIMELINE_STAGES[activeStep].highlights.map((h, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle className="w-3.5 h-3.5 text-[#FF6A00] mt-0.5 flex-shrink-0" />
-                        <span>{h}</span>
+
+                  <ul className="space-y-3">
+                    {activeStage.highlights.map((item, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-start gap-2 text-xs leading-relaxed text-slate-600"
+                      >
+                        <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-yellow-600" />
+                        <span>{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -125,46 +171,83 @@ export const TimelineSection = () => {
               </div>
             </motion.div>
           )}
-
         </div>
 
-        {/* 2. Mobile & Tablet Vertical Timeline */}
-        <div className="lg:hidden space-y-6 relative">
-          <div className="absolute left-6 top-3 bottom-3 w-0.5 bg-[rgba(255,179,107,0.2)] -z-0" />
+        {/* Mobile & Tablet Vertical Timeline */}
+        <div className="relative space-y-6 lg:hidden">
+
+          {/* Vertical Connecting Line */}
+          <div className="absolute bottom-6 left-6 top-6 w-0.5 bg-slate-200" />
 
           {TIMELINE_STAGES.map((stage) => {
             const isCurrent = stage.status === 'current';
 
             return (
-              <div key={stage.step} className="relative flex items-start gap-4 z-10">
-                {/* Node */}
-                <div className={`w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center font-mono font-bold text-sm ${
-                  isCurrent 
-                    ? 'bg-[#FF6A00] text-white shadow-orange-glow border-2 border-white/40' 
-                    : 'bg-[#1C1410] text-[#FFB36B] border border-[rgba(255,179,107,0.25)]'
-                }`}>
+              <div
+                key={stage.step}
+                className="relative z-10 flex items-start gap-4"
+              >
+                {/* Timeline Node */}
+                <div
+                  className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border-2 text-sm font-bold ${
+                    isCurrent
+                      ? 'border-yellow-400 bg-yellow-400 text-slate-950 shadow-md shadow-yellow-200'
+                      : 'border-slate-200 bg-white text-slate-500'
+                  }`}
+                >
                   {stage.step}
                 </div>
 
-                {/* Content Card */}
-                <div className="flex-1 bg-[#1C1410] border border-[rgba(255,179,107,0.18)] rounded-2xl p-5 space-y-2">
+                {/* Stage Card */}
+                <div className="flex-1 space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:border-yellow-300 hover:shadow-md">
+
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-[11px] font-mono text-[#FFB36B] flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      <span>{stage.dates}</span>
+                    <span className="flex items-center gap-1.5 text-xs font-semibold text-yellow-700">
+                      <Calendar className="h-3.5 w-3.5" />
+                      {stage.dates}
                     </span>
+
                     {isCurrent && (
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#FF6A00]/20 text-[#FFB36B] border border-[#FF6A00]/40">
+                      <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-700">
                         Sedang Berlangsung
                       </span>
                     )}
                   </div>
-                  <h4 className="text-base font-bold font-display text-[#FFF7F0]">
+
+                  <h4 className="text-base font-bold text-slate-900">
                     {stage.title}
                   </h4>
-                  <p className="text-xs text-[#C4B3A7] leading-relaxed">
+
+                  {stage.subtitle && (
+                    <p className="text-xs font-semibold text-yellow-700">
+                      {stage.subtitle}
+                    </p>
+                  )}
+
+                  <p className="text-xs leading-relaxed text-slate-600">
                     {stage.description}
                   </p>
+
+                  {/* Activity Highlights */}
+                  {stage.highlights?.length > 0 && (
+                    <div className="border-t border-slate-100 pt-3">
+                      <p className="mb-2 text-xs font-bold text-slate-700">
+                        Fokus Aktivitas:
+                      </p>
+
+                      <ul className="space-y-2">
+                        {stage.highlights.map((item, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-start gap-2 text-xs text-slate-500"
+                          >
+                            <CheckCircle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-yellow-600" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
             );

@@ -1,6 +1,17 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Terminal, Shield, Mail, Phone, ExternalLink, ArrowUpRight } from 'lucide-react';
+import {
+  Mail,
+  Phone,
+  ArrowUpRight,
+  MapPin,
+  Instagram,
+  Linkedin,
+  Youtube,
+  Clock3,
+} from 'lucide-react';
+
 import { FESTIVAL_INFO, COMPETITIONS_DATA } from '../../data/festivalData';
 import { useWebsiteConfig } from '../../context/WebsiteConfigContext';
 
@@ -9,118 +20,240 @@ export const Footer = () => {
   const general = config?.general || {};
   const footer = config?.footer || {};
 
-  return (
-    <footer className="bg-[#100B08] text-[#C4B3A7] border-t border-[rgba(255,179,107,0.16)] relative overflow-hidden">
-      {/* Background Subtle Ambient Glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-96 h-32 bg-[radial-gradient(circle,rgba(255,106,0,0.08)_0%,transparent_70%)] pointer-events-none blur-2xl" />
+  const socialLinks = [
+    {
+      name: 'Instagram',
+      url: general.instagramUrl,
+      icon: Instagram,
+    },
+    {
+      name: 'LinkedIn',
+      url: general.linkedinUrl,
+      icon: Linkedin,
+    },
+    {
+      name: 'YouTube',
+      url: general.youtubeUrl,
+      icon: Youtube,
+    },
+  ].filter((item) => item.url);
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
-        
-        {/* Main 4-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
-          
-          {/* Col 1: Branding & Description (5 cols) */}
-          <div className="lg:col-span-5 space-y-4">
-            <Link to="/" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#FF6A00] to-[#FFB36B] flex items-center justify-center text-white font-black text-xl shadow-orange-glow">
-                {general.siteName ? general.siteName.charAt(0) : 'N'}
+  const regions = [
+    'Cirebon',
+    'Indramayu',
+    'Majalengka',
+    'Kuningan',
+  ];
+
+  return (
+    <footer className="relative overflow-hidden border-t border-slate-200 bg-white text-slate-600">
+
+      {/* Decorative Background */}
+      <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-yellow-100/70 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-yellow-50 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-7xl space-y-12 px-4 py-16 sm:px-6 lg:px-8">
+
+        {/* Main Footer */}
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12">
+
+          {/* Branding */}
+          <div className="space-y-5 lg:col-span-4">
+
+            <Link to="/" className="group flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-400 text-xl font-black text-slate-950 shadow-md shadow-yellow-200 transition-transform group-hover:-translate-y-1">
+                {general.siteName
+                  ? general.siteName.charAt(0)
+                  : 'N'}
               </div>
+
               <div>
-                <span className="text-xl font-black tracking-tight text-[#FFF7F0] block leading-tight font-display">
+                <span className="block text-lg font-black tracking-tight text-slate-900">
                   {general.siteName || 'NEXUS ITC'}
                 </span>
-                <span className="text-[10px] font-mono text-[#FFB36B] uppercase tracking-wider block">
+
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   {general.editionTag || 'EDITION 2026 // TECH FESTIVAL'}
                 </span>
               </div>
             </Link>
 
-            <p className="text-sm text-[#948277] max-w-sm leading-relaxed font-sans">
-              {footer.bioText || 'Festival kompetisi teknologi tahunan persembahan HIMATIF. Wadah pembuktian inovasi, karya rekayasa perangkat lunak, dan keunggulan digital bagi talenta muda Indonesia.'}
+            <p className="max-w-sm text-sm leading-relaxed text-slate-500">
+              {footer.bioText ||
+                'Festival kompetisi teknologi tahunan persembahan HIMATIF. Wadah pembuktian inovasi, karya rekayasa perangkat lunak, dan keunggulan digital bagi talenta muda Indonesia.'}
             </p>
 
-            {/* Region Pills */}
-            <div className="pt-2 flex flex-wrap gap-2 text-[11px] font-mono text-[#FFB36B]">
-              <span className="px-2.5 py-1 bg-[#1C1410] rounded-lg border border-[rgba(255,179,107,0.15)]">Cirebon</span>
-              <span className="px-2.5 py-1 bg-[#1C1410] rounded-lg border border-[rgba(255,179,107,0.15)]">Indramayu</span>
-              <span className="px-2.5 py-1 bg-[#1C1410] rounded-lg border border-[rgba(255,179,107,0.15)]">Majalengka</span>
-              <span className="px-2.5 py-1 bg-[#1C1410] rounded-lg border border-[rgba(255,179,107,0.15)]">Kuningan</span>
+            {/* Region */}
+            <div className="flex flex-wrap gap-2">
+              {regions.map((region) => (
+                <span
+                  key={region}
+                  className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600"
+                >
+                  {region}
+                </span>
+              ))}
             </div>
+
+            {/* Social Media */}
+            {socialLinks.length > 0 && (
+              <div className="flex items-center gap-3 pt-2">
+                {socialLinks.map((social) => {
+                  const Icon = social.icon;
+
+                  return (
+                    <a
+                      key={social.name}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.name}
+                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition-all hover:-translate-y-1 hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-700"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+
           </div>
 
-          {/* Col 2: Navigation Links (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF7F0]">
+          {/* Navigation */}
+          <div className="space-y-4 lg:col-span-2">
+
+            <h4 className="text-sm font-bold text-slate-900">
               Navigasi
             </h4>
-            <ul className="space-y-2 text-sm text-[#C4B3A7]">
-              <li><Link to="/" className="hover:text-[#FFB36B] transition-colors">Beranda</Link></li>
-              <li><Link to="/about" className="hover:text-[#FFB36B] transition-colors">Tentang Acara</Link></li>
-              <li><Link to="/competitions" className="hover:text-[#FFB36B] transition-colors">Daftar Lomba</Link></li>
-              <li><Link to="/timeline" className="hover:text-[#FFB36B] transition-colors">Timeline Resmi</Link></li>
-              <li><Link to="/faq" className="hover:text-[#FFB36B] transition-colors">Pusat Bantuan (FAQ)</Link></li>
+
+            <ul className="space-y-3 text-sm">
+              <li>
+                <Link to="/" className="transition-colors hover:text-yellow-600">
+                  Beranda
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/about" className="transition-colors hover:text-yellow-600">
+                  Tentang Acara
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/competitions" className="transition-colors hover:text-yellow-600">
+                  Daftar Lomba
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/timeline" className="transition-colors hover:text-yellow-600">
+                  Timeline Resmi
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/faq" className="transition-colors hover:text-yellow-600">
+                  Pusat Bantuan (FAQ)
+                </Link>
+              </li>
             </ul>
+
           </div>
 
-          {/* Col 3: Competitions Shortcuts (3 cols) */}
-          <div className="lg:col-span-3 space-y-3">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF7F0]">
+          {/* Competition */}
+          <div className="space-y-4 lg:col-span-3">
+
+            <h4 className="text-sm font-bold text-slate-900">
               Cabang Lomba
             </h4>
-            <ul className="space-y-2 text-sm text-[#C4B3A7]">
-              {COMPETITIONS_DATA.slice(0, 5).map((comp) => (
+
+            <ul className="space-y-3 text-sm">
+              {COMPETITIONS_DATA.slice(0, 6).map((comp) => (
                 <li key={comp.slug}>
-                  <Link 
-                    to={`/competitions/${comp.slug}`} 
-                    className="hover:text-[#FFB36B] transition-colors flex items-center justify-between group"
+                  <Link
+                    to={`/competitions/${comp.slug}`}
+                    className="group flex items-center justify-between gap-2 transition-colors hover:text-yellow-700"
                   >
-                    <span className="line-clamp-1">{comp.title}</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-[#948277] group-hover:text-[#FF6A00] opacity-0 group-hover:opacity-100 transition-all" />
+                    <span className="line-clamp-1">
+                      {comp.title}
+                    </span>
+
+                    <ArrowUpRight className="h-4 w-4 flex-shrink-0 text-slate-300 opacity-0 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-yellow-600 group-hover:opacity-100" />
                   </Link>
                 </li>
               ))}
             </ul>
+
           </div>
 
-          {/* Col 4: Contact & Helpdesk (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#FFF7F0]">
+          {/* Contact */}
+          <div className="space-y-4 lg:col-span-3">
+
+            <h4 className="text-sm font-bold text-slate-900">
               Sekretariat
             </h4>
-            <div className="space-y-2 text-xs text-[#948277]">
-              <p>{general.address || 'Gedung HIMATIF Center, Ciayumajakuning, Jawa Barat'}</p>
-              <p className="flex items-center gap-1.5 text-[#C4B3A7]">
-                <Mail className="w-3.5 h-3.5 text-[#FF7A1A]" />
-                <span>{general.contactEmail || FESTIVAL_INFO.contactEmail}</span>
-              </p>
-              <p className="flex items-center gap-1.5 text-[#C4B3A7]">
-                <Phone className="w-3.5 h-3.5 text-[#FF7A1A]" />
-                <span>{general.contactPhone || FESTIVAL_INFO.contactWhatsapp}</span>
-              </p>
+
+            <div className="space-y-4 text-sm">
+
+              <div className="flex items-start gap-3">
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700">
+                  <MapPin className="h-4 w-4" />
+                </div>
+
+                <p className="leading-relaxed text-slate-500">
+                  {general.address ||
+                    'Gedung HIMATIF Center, Ciayumajakuning, Jawa Barat'}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700">
+                  <Mail className="h-4 w-4" />
+                </div>
+
+                <span className="break-all text-slate-500">
+                  {general.contactEmail || FESTIVAL_INFO.contactEmail}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700">
+                  <Phone className="h-4 w-4" />
+                </div>
+
+                <span className="text-slate-500">
+                  {general.contactPhone || FESTIVAL_INFO.contactWhatsapp}
+                </span>
+              </div>
+
             </div>
-            <div className="pt-2">
-              <a 
-                href={FESTIVAL_INFO.guidebookUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-[#FFB36B] hover:text-white underline font-mono"
-              >
-                <span>Unduh Guidebook Resmi</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
+
+            {/* Guidebook - Coming Soon */}
+            <div className="inline-flex cursor-default items-center gap-2 rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-2.5 text-xs font-bold text-yellow-800">
+              <Clock3 className="h-4 w-4" />
+              <span>Guidebook Segera Hadir</span>
             </div>
+
           </div>
 
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-[rgba(255,179,107,0.12)] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[#948277]">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>SYS_STATUS: NOMINAL // HYBRID EVENT ENGINE READY</span>
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-center sm:flex-row sm:text-left">
+
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+
+            <span>
+              NEXUS ITC 2026 · Official Competition Website
+            </span>
           </div>
 
-          <p>{footer.copyrightText || '© 2026 HIMATIF IT Competition. All Rights Reserved.'}</p>
+          <p className="text-xs text-slate-400">
+            {footer.copyrightText ||
+              '© 2026 HIMATIF IT Competition. All Rights Reserved.'}
+          </p>
+
         </div>
 
       </div>
@@ -129,4 +262,3 @@ export const Footer = () => {
 };
 
 export default Footer;
-

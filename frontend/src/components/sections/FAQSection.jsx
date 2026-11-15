@@ -1,6 +1,14 @@
+
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, HelpCircle, FileText, MessageSquare } from 'lucide-react';
+import {
+  ChevronDown,
+  MessageCircle,
+  FileText,
+  HelpCircle,
+  Sparkles,
+} from 'lucide-react';
+
 import SectionHeading from '../ui/SectionHeading';
 import Button from '../ui/Button';
 import { FAQ_DATA, FESTIVAL_INFO } from '../../data/festivalData';
@@ -13,14 +21,16 @@ export const FAQSection = () => {
 
   const categories = useMemo(() => {
     if (dynamicFaqs.length === 0) {
-      return FAQ_DATA.map((c) => c.category);
+      return FAQ_DATA.map((category) => category.category);
     }
+
     const cats = new Set(
-      dynamicFaqs.map((f) => {
-        const cat = f.category || 'umum';
-        return cat.charAt(0).toUpperCase() + cat.slice(1);
+      dynamicFaqs.map((faq) => {
+        const category = faq.category || 'umum';
+        return category.charAt(0).toUpperCase() + category.slice(1);
       })
     );
+
     return ['Semua', ...Array.from(cats)];
   }, [dynamicFaqs]);
 
@@ -31,140 +41,239 @@ export const FAQSection = () => {
     if (dynamicFaqs.length === 0) {
       return FAQ_DATA[activeCategoryIndex]?.questions || [];
     }
-    const selectedCat = categories[activeCategoryIndex];
-    if (selectedCat === 'Semua') {
-      return dynamicFaqs.map((f) => ({ q: f.question, a: f.answer }));
+
+    const selectedCategory = categories[activeCategoryIndex];
+
+    if (selectedCategory === 'Semua') {
+      return dynamicFaqs.map((faq) => ({
+        q: faq.question,
+        a: faq.answer,
+      }));
     }
+
     return dynamicFaqs
-      .filter((f) => (f.category || 'umum').toLowerCase() === selectedCat.toLowerCase())
-      .map((f) => ({ q: f.question, a: f.answer }));
+      .filter(
+        (faq) =>
+          (faq.category || 'umum').toLowerCase() ===
+          selectedCategory.toLowerCase()
+      )
+      .map((faq) => ({
+        q: faq.question,
+        a: faq.answer,
+      }));
   }, [dynamicFaqs, categories, activeCategoryIndex]);
 
   const toggleQuestion = (index) => {
     setOpenIndex(openIndex === index ? -1 : index);
   };
 
-  const contactPhone = general.contactPhone || FESTIVAL_INFO.contactWhatsapp;
+  const whatsappNumber = FESTIVAL_INFO.contactWhatsapp.replace(
+    /[^0-9]/g,
+    ''
+  );
+
+  const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
   return (
-    <section id="faq" className="relative py-24 sm:py-32 bg-[#100B08] border-b border-[rgba(255,179,107,0.12)] overflow-hidden">
-      {/* Background Ambient Glow */}
-      <div className="absolute top-1/2 left-10 w-96 h-96 bg-[radial-gradient(circle,rgba(255,106,0,0.06)_0%,transparent_70%)] pointer-events-none blur-3xl -z-10" />
+    <section
+      id="faq"
+      className="relative overflow-hidden border-b border-slate-200 bg-white py-24 sm:py-32"
+    >
+      {/* Background Decoration */}
+      <div className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-yellow-100/60 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-yellow-50 blur-3xl" />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
-        
+      <div className="relative z-10 mx-auto max-w-5xl space-y-12 px-4 sm:px-6 lg:px-8">
+
         {/* Section Heading */}
         <SectionHeading
           badge="// 05. FREQUENTLY ASKED"
           title="Pertanyaan yang Sering"
           highlight="Diajukan"
-          description="Temukan jawaban cepat seputar persyaratan pendaftaran, berkas administrasi, dan sistem perlombaan."
+          description="Temukan jawaban seputar persyaratan pendaftaran, berkas administrasi, dan sistem perlombaan NEXUS ITC 2026."
         />
 
-        {/* Category Selector Tabs */}
+        {/* FAQ Introduction */}
+        <div className="mx-auto flex max-w-xl items-center justify-center gap-3 text-center">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700">
+            <HelpCircle className="h-5 w-5" />
+          </div>
+
+          <p className="text-left text-sm leading-relaxed text-slate-500">
+            Pilih kategori pertanyaan di bawah ini untuk menemukan informasi
+            yang Anda butuhkan.
+          </p>
+        </div>
+
+        {/* Category Selector */}
         <div className="flex flex-wrap justify-center gap-2">
-          {categories.map((cat, idx) => (
+          {categories.map((category, index) => (
             <button
-              key={cat}
+              key={category}
+              type="button"
               onClick={() => {
-                setActiveCategoryIndex(idx);
+                setActiveCategoryIndex(index);
                 setOpenIndex(0);
               }}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                activeCategoryIndex === idx
-                  ? 'bg-[#FF6A00] text-white shadow-orange-glow'
-                  : 'bg-[#1C1410] text-[#C4B3A7] hover:text-[#FFF7F0] border border-[rgba(255,179,107,0.18)] hover:border-[#FF7A1A]'
+              className={`rounded-full border px-5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm ${
+                activeCategoryIndex === index
+                  ? 'border-yellow-400 bg-yellow-400 text-slate-950 shadow-md shadow-yellow-200'
+                  : 'border-slate-200 bg-white text-slate-600 hover:border-yellow-300 hover:bg-yellow-50'
               }`}
             >
-              {cat}
+              {category}
             </button>
           ))}
         </div>
 
-
-        {/* Accordion Container */}
-        <div className="space-y-4">
-          {currentQuestions.map((item, idx) => {
-            const isOpen = openIndex === idx;
+        {/* Accordion */}
+        <div className="space-y-3">
+          {currentQuestions.map((item, index) => {
+            const isOpen = openIndex === index;
 
             return (
-              <div
-                key={idx}
-                className={`bg-[#1C1410] border rounded-2xl transition-colors duration-200 overflow-hidden ${
+              <motion.div
+                key={`${activeCategoryIndex}-${index}`}
+                layout
+                className={`overflow-hidden rounded-2xl border bg-white transition-all duration-200 ${
                   isOpen
-                    ? 'border-[#FF7A1A] shadow-amber-subtle'
-                    : 'border-[rgba(255,179,107,0.16)] hover:border-[rgba(255,179,107,0.3)]'
+                    ? 'border-yellow-400 shadow-lg shadow-yellow-100/70'
+                    : 'border-slate-200 hover:border-yellow-300 hover:shadow-md'
                 }`}
               >
                 <button
+                  id={`faq-question-${index}`}
                   type="button"
-                  onClick={() => toggleQuestion(idx)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-[#FFC58A] focus:ring-inset"
+                  onClick={() => toggleQuestion(index)}
+                  className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left sm:px-6"
                   aria-expanded={isOpen}
-                  aria-controls={`faq-answer-${idx}`}
+                  aria-controls={`faq-answer-${index}`}
                 >
-                  <span className={`text-base sm:text-lg font-bold font-display transition-colors ${
-                    isOpen ? 'text-[#FFB36B]' : 'text-[#FFF7F0]'
-                  }`}>
-                    {item.q}
-                  </span>
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center bg-[#211811] text-[#FFB36B] border border-[rgba(255,179,107,0.15)] flex-shrink-0 ml-4 transition-transform duration-200 ${
-                    isOpen ? 'rotate-180 bg-[#FF6A00] text-white' : ''
-                  }`}>
-                    <ChevronDown className="w-4 h-4" />
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                        isOpen
+                          ? 'bg-yellow-400 text-slate-950'
+                          : 'bg-slate-100 text-slate-500'
+                      }`}
+                    >
+                      <span className="text-sm font-bold">
+                        {(index + 1).toString().padStart(2, '0')}
+                      </span>
+                    </span>
+
+                    <span
+                      className={`text-sm font-bold leading-relaxed sm:text-base ${
+                        isOpen ? 'text-slate-950' : 'text-slate-700'
+                      }`}
+                    >
+                      {item.q}
+                    </span>
                   </div>
+
+                  <span
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-200 ${
+                      isOpen
+                        ? 'rotate-180 bg-yellow-400 text-slate-950'
+                        : 'bg-slate-100 text-slate-500'
+                    }`}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </span>
                 </button>
 
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
-                      id={`faq-answer-${idx}`}
+                      id={`faq-answer-${index}`}
                       role="region"
-                      aria-labelledby={`faq-question-${idx}`}
+                      aria-labelledby={`faq-question-${index}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      transition={{
+                        duration: 0.25,
+                        ease: 'easeInOut',
+                      }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-6 pt-1 text-sm sm:text-base text-[#C4B3A7] leading-relaxed font-sans border-t border-[rgba(255,179,107,0.08)]">
-                        {item.a}
+                      <div className="ml-5 border-t border-slate-100 px-5 pb-6 pt-4 sm:ml-6 sm:px-6">
+                        <p className="text-sm leading-relaxed text-slate-600 sm:text-base">
+                          {item.a}
+                        </p>
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
             );
           })}
+
+          {currentQuestions.length === 0 && (
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
+              <HelpCircle className="mx-auto mb-3 h-8 w-8 text-slate-400" />
+              <p className="font-semibold text-slate-700">
+                Belum ada pertanyaan pada kategori ini.
+              </p>
+              <p className="mt-1 text-sm text-slate-500">
+                Silakan pilih kategori lainnya.
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Support Help Box */}
-        <div className="bg-[#17110D] border border-[rgba(255,179,107,0.2)] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
-          <div className="space-y-1">
-            <h4 className="text-lg font-bold font-display text-[#FFF7F0]">
-              Masih Memiliki Pertanyaan Lain?
-            </h4>
-            <p className="text-xs sm:text-sm text-[#948277]">
-              Tim helpdesk resmi kami siap membantu Anda melalui WhatsApp dan email resmi panitia.
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <a 
-              href={`https://wa.me/${FESTIVAL_INFO.contactWhatsapp.replace(/[^0-9]/g, '')}`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              <Button variant="secondary" size="sm" className="gap-2">
-                <MessageSquare className="w-4 h-4 text-[#FF7A1A]" />
-                <span>Hubungi Panitia</span>
-              </Button>
-            </a>
-            <a href={FESTIVAL_INFO.guidebookUrl} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="sm" className="gap-2">
-                <FileText className="w-4 h-4" />
-                <span>Guidebook PDF</span>
-              </Button>
-            </a>
+        {/* Contact Support */}
+        <div className="relative overflow-hidden rounded-3xl border border-yellow-200 bg-gradient-to-br from-yellow-50 via-white to-white p-6 shadow-sm sm:p-8">
+          <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-yellow-200/40" />
+
+          <div className="relative flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
+            <div className="max-w-lg space-y-2">
+              <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-yellow-100 px-3 py-1 text-xs font-bold text-yellow-800">
+                <Sparkles className="h-3.5 w-3.5" />
+                BUTUH BANTUAN?
+              </div>
+
+              <h3 className="text-xl font-black text-slate-900 sm:text-2xl">
+                Masih Memiliki Pertanyaan Lain?
+              </h3>
+
+              <p className="text-sm leading-relaxed text-slate-600">
+                Tim helpdesk resmi kami siap membantu Anda melalui WhatsApp
+                dan menyediakan panduan lengkap mengenai kompetisi.
+              </p>
+            </div>
+
+            <div className="relative flex flex-wrap justify-center gap-3">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="gap-2 border-0 bg-yellow-400 text-slate-950 hover:bg-yellow-300"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span>Hubungi Panitia</span>
+                </Button>
+              </a>
+
+              <a
+                href={FESTIVAL_INFO.guidebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>Guidebook PDF</span>
+                </Button>
+              </a>
+            </div>
           </div>
         </div>
 

@@ -12,7 +12,7 @@ export const FESTIVAL_INFO = {
   dates: '10 FEBRUARI - 03 MEI 2026',
   venue: 'Auditorium Utama & Hybrid Digital Platform',
   totalPrizePool: 'Rp 50.000.000+',
-  totalCompetitions: '6 Cabang Lomba',
+  totalCompetitions: '4 Cabang Lomba',
   academicTiers: 'Mahasiswa & Siswa SMA/SMK',
   participantsEstimate: '1.200+ Peserta Nasional',
   contactEmail: 'contact@himatif-itc.id',
