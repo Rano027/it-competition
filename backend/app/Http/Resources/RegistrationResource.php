@@ -28,7 +28,7 @@ class RegistrationResource extends JsonResource
                     'slug' => $this->competition->slug,
                     'competition_type' => $this->competition->competition_type?->value ?? $this->competition->competition_type,
                     'target_level' => $this->competition->target_level?->value ?? $this->competition->target_level,
-                    'registration_fee' => (float) $this->competition->registration_fee,
+                    'registration_fee' => (float) $this->competition->getRegistrationFeeForDate($this->created_at),                    
                     'min_team_member' => $this->competition->min_team_member,
                     'max_team_member' => $this->competition->max_team_member,
                     'status' => $this->competition->status?->value ?? $this->competition->status,

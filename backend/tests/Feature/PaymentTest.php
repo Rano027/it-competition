@@ -75,7 +75,9 @@ class PaymentTest extends TestCase
             'category' => CompetitionCategory::WebDevelopment,
             'target_level' => CompetitionTargetLevel::University,
             'description' => 'Paid Competition Description',
-            'registration_fee' => 75000,
+            'registration_fee' => 80000,
+            'registration_fee_batch_1' => 80000,
+            'registration_fee_batch_2' => 95000,            
             'min_team_member' => 1,
             'max_team_member' => 1,
             'status' => CompetitionStatus::RegistrationOpen,
@@ -135,16 +137,80 @@ class PaymentTest extends TestCase
             ]);
 
         $response->assertStatus(201)
-            ->assertJsonPath('data.amount', 75000)
+            ->assertJsonPath('data.amount', 80000)
             ->assertJsonPath('data.status', 'pending');
 
         $this->assertDatabaseHas('payments', [
             'registration_id' => $this->paidReg->id,
-            'amount' => 75000,
+            'amount' => 80000,
             'status' => 'pending',
         ]);
+        
     }
+public function test_batch_one_registration_uses_batch_one_fee(): void
+{
+    $this->paidReg->forceFill([
+        'created_at' => \Carbon\Carbon::parse('2026-11-25 10:00:00'),
+    ])->save();
 
+    $response = $this->actingAs($this->participant1)
+        ->postJson('/api/v1/participant/payments', [
+            'registration_id' => $this->paidReg->id,
+        ]);
+
+    $response->assertStatus(201)
+        ->assertJsonPath('data.amount', 80000);
+
+    $this->assertDatabaseHas('payments', [
+        'registration_id' => $this->paidReg->id,
+        'amount' => 80000,
+    ]);
+}
+
+    public function test_batch_two_registration_uses_batch_two_fee(): void
+{
+    $this->paidReg->forceFill([
+        'created_at' => \Carbon\Carbon::parse('2026-12-10 10:00:00'),
+    ])->save();
+
+    $response = $this->actingAs($this->participant1)
+        ->postJson('/api/v1/participant/payments', [
+            'registration_id' => $this->paidReg->id,
+        ]);
+
+    $response->assertStatus(201)
+        ->assertJsonPath('data.amount', 95000);
+
+    $this->assertDatabaseHas('payments', [
+        'registration_id' => $this->paidReg->id,
+        'amount' => 95000,
+    ]);
+}
+public function test_batch_one_registration_keeps_batch_one_fee_when_paid_during_batch_two(): void
+{
+    // Registrasi dibuat pada Batch 1
+    $this->paidReg->forceFill([
+        'created_at' => \Carbon\Carbon::parse('2026-12-07 23:00:00'),
+    ])->save();
+
+    // Pembayaran dilakukan ketika Batch 2 sudah berlangsung
+    $this->travelTo(\Carbon\Carbon::parse('2026-12-10 10:00:00'));
+
+    $response = $this->actingAs($this->participant1)
+        ->postJson('/api/v1/participant/payments', [
+            'registration_id' => $this->paidReg->id,
+        ]);
+
+    $response->assertStatus(201)
+        ->assertJsonPath('data.amount', 80000);
+
+    $this->assertDatabaseHas('payments', [
+        'registration_id' => $this->paidReg->id,
+        'amount' => 80000,
+    ]);
+
+    $this->travelBack();
+}
     public function test_participant_cannot_create_or_view_another_participants_payment(): void
     {
         // Participant 2 attempts to create payment for Participant 1's registration
@@ -168,6 +234,7 @@ class PaymentTest extends TestCase
         $viewResponse->assertStatus(403);
     }
 
+    
     public function test_payment_proof_upload_validation(): void
     {
         $payment = Payment::create([

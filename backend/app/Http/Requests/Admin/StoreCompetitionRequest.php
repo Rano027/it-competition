@@ -52,6 +52,8 @@ class StoreCompetitionRequest extends FormRequest
             'theme' => ['nullable', 'string', 'max:255'],
             'target_level' => ['required', new Enum(CompetitionTargetLevel::class)],
             'registration_fee' => ['required', 'integer', 'min:0'],
+            'registration_fee_batch_1' => ['nullable', 'integer', 'min:0'],
+            'registration_fee_batch_2' => ['nullable', 'integer', 'min:0'],
             'quota' => ['required', 'integer', 'min:1'],
             'min_team_member' => ['required', 'integer', 'min:1'],
             'max_team_member' => ['required', 'integer', 'gte:min_team_member'],

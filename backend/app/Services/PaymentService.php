@@ -22,55 +22,70 @@ class PaymentService
     /**
      * Initiate payment record for a paid competition registration.
      */
-    public function createPayment(User $user, int $registrationId, string $method = 'bank_transfer'): Payment
-    {
-        /** @var Registration $registration */
-        $registration = Registration::with('competition', 'team')->findOrFail($registrationId);
+    
+public function createPayment(User $user, int $registrationId, string $method = 'bank_transfer'): Payment
+{
+    /** @var Registration $registration */
+    $registration = Registration::with('competition', 'team')->findOrFail($registrationId);
 
-        // 1. Verify ownership
-        $isOwner = $registration->user_id === $user->id;
-        $isLeader = $registration->team && $registration->team->leader_id === $user->id;
+    // 1. Verify ownership
+    $isOwner = $registration->user_id === $user->id;
+    $isLeader = $registration->team && $registration->team->leader_id === $user->id;
 
-        if (! $user->isAdmin() && ! $isOwner && ! $isLeader) {
-            throw ValidationException::withMessages([
-                'registration_id' => ['Anda tidak memiliki otorisasi untuk melakukan pembayaran pada pendaftaran ini.'],
-            ]);
-        }
-
-        $competition = $registration->competition;
-
-        // 2. Free competition bypass
-        if ((int) $competition->registration_fee === 0) {
-            throw ValidationException::withMessages([
-                'registration_id' => ['Kompetisi ini gratis dan tidak memerlukan pembayaran.'],
-            ]);
-        }
-
-        // 3. Existing payment checks
-        $existing = Payment::where('registration_id', $registration->id)->first();
-        if ($existing) {
-            if ($existing->isApproved()) {
-                throw ValidationException::withMessages([
-                    'registration_id' => ['Pembayaran untuk pendaftaran ini telah disetujui sebelumnya.'],
-                ]);
-            }
-
-            return $existing->load(['registration.competition', 'registration.team.leader', 'user', 'reviewer']);
-        }
-
-        // 4. Create new payment with server-determined amount
-        return DB::transaction(function () use ($registration, $competition, $user, $method) {
-            $payment = Payment::create([
-                'registration_id' => $registration->id,
-                'user_id' => $user->id,
-                'amount' => (int) $competition->registration_fee,
-                'payment_method' => $method,
-                'status' => PaymentStatus::Pending,
-            ]);
-
-            return $payment->load(['registration.competition', 'registration.team.leader', 'user']);
-        });
+    if (! $user->isAdmin() && ! $isOwner && ! $isLeader) {
+        throw ValidationException::withMessages([
+            'registration_id' => ['Anda tidak memiliki otorisasi untuk melakukan pembayaran pada pendaftaran ini.'],
+        ]);
     }
+
+    $competition = $registration->competition;
+
+    // 2. Determine registration fee based on registration creation date
+    $registrationFee = $competition->getRegistrationFeeForDate($registration->created_at);
+// 3. Existing payment checks
+    $existing = Payment::where('registration_id', $registration->id)->first();
+
+    if ($existing) {
+        if ($existing->isApproved()) {
+            throw ValidationException::withMessages([
+                'registration_id' => ['Pembayaran untuk pendaftaran ini telah disetujui sebelumnya.'],
+            ]);
+        }
+
+        return $existing->load([
+            'registration.competition',
+            'registration.team.leader',
+            'user',
+            'reviewer',
+        ]);
+    }
+    // 4. Free competition bypass
+    if ($registrationFee === 0) {
+        throw ValidationException::withMessages([
+            'registration_id' => ['Kompetisi ini gratis dan tidak memerlukan pembayaran.'],
+        ]);
+    }
+
+    
+
+    // 5. Create new payment with server-determined amount
+    return DB::transaction(function () use ($registration, $user, $method, $registrationFee) {
+        $payment = Payment::create([
+            'registration_id' => $registration->id,
+            'user_id' => $user->id,
+            'amount' => $registrationFee,
+            'payment_method' => $method,
+            'status' => PaymentStatus::Pending,
+        ]);
+
+        return $payment->load([
+            'registration.competition',
+            'registration.team.leader',
+            'user',
+        ]);
+    });
+}
+
 
     /**
      * Upload payment proof to private storage.

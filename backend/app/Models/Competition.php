@@ -19,47 +19,50 @@ class Competition extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'slug',
-        'category',
-        'competition_type',
-        'description',
-        'theme',
-        'target_level',
-        'registration_fee',
-        'quota',
-        'min_team_member',
-        'max_team_member',
-        'registration_start',
-        'registration_end',
-        'submission_start',
-        'submission_deadline',
-        'status',
-        'is_published',
-        'guidebook_url',
-        'poster_url',
-    ];
+   protected $fillable = [
+    'name',
+    'slug',
+    'category',
+    'competition_type',
+    'description',
+    'theme',
+    'target_level',
+    'registration_fee',
+    'registration_fee_batch_1',
+    'registration_fee_batch_2',
+    'quota',
+    'min_team_member',
+    'max_team_member',
+    'registration_start',
+    'registration_end',
+    'submission_start',
+    'submission_deadline',
+    'status',
+    'is_published',
+    'guidebook_url',
+    'poster_url',
+];
 
     protected function casts(): array
-    {
-        return [
-            'category' => CompetitionCategory::class,
-            'competition_type' => CompetitionType::class,
-            'target_level' => CompetitionTargetLevel::class,
-            'status' => CompetitionStatus::class,
-            'registration_fee' => 'integer',
-            'quota' => 'integer',
-            'min_team_member' => 'integer',
-            'max_team_member' => 'integer',
-            'registration_start' => 'datetime',
-            'registration_end' => 'datetime',
-            'submission_start' => 'datetime',
-            'submission_deadline' => 'datetime',
-            'is_published' => 'boolean',
-        ];
-    }
-
+{
+    return [
+        'category' => CompetitionCategory::class,
+        'competition_type' => CompetitionType::class,
+        'target_level' => CompetitionTargetLevel::class,
+        'status' => CompetitionStatus::class,
+        'registration_fee' => 'integer',
+        'registration_fee_batch_1' => 'integer',
+        'registration_fee_batch_2' => 'integer',
+        'quota' => 'integer',
+        'min_team_member' => 'integer',
+        'max_team_member' => 'integer',
+        'registration_start' => 'datetime',
+        'registration_end' => 'datetime',
+        'submission_start' => 'datetime',
+        'submission_deadline' => 'datetime',
+        'is_published' => 'boolean',
+    ];
+}
     public function isTeamBased(): bool
     {
         return $this->competition_type === CompetitionType::Team;
@@ -229,4 +232,25 @@ class Competition extends Model
     {
         return $this->hasMany(JudgeAssignment::class);
     }
+
+    public function getRegistrationFeeForDate($registrationDate): int
+{
+    $date = \Illuminate\Support\Carbon::parse($registrationDate);
+
+    $batch1Start = \Illuminate\Support\Carbon::parse('2026-11-21 00:00:00');
+    $batch1End = \Illuminate\Support\Carbon::parse('2026-12-07 23:59:59');
+
+    $batch2Start = \Illuminate\Support\Carbon::parse('2026-12-08 00:00:00');
+    $batch2End = \Illuminate\Support\Carbon::parse('2026-12-28 23:59:59');
+
+    if ($date->between($batch1Start, $batch1End)) {
+        return (int) ($this->registration_fee_batch_1 ?? $this->registration_fee);
+    }
+
+    if ($date->between($batch2Start, $batch2End)) {
+        return (int) ($this->registration_fee_batch_2 ?? $this->registration_fee);
+    }
+
+    return (int) $this->registration_fee;
+}
 }

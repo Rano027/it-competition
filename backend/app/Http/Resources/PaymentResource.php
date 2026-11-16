@@ -32,7 +32,7 @@ class PaymentResource extends JsonResource
                     'competition' => [
                         'id' => $this->registration->competition?->id,
                         'title' => $this->registration->competition?->title ?? $this->registration->competition?->name,
-                        'registration_fee' => (int) ($this->registration->competition?->registration_fee ?? 0),
+                        'registration_fee' => (int) $this->amount,
                     ],
                     'team' => $this->registration->team ? [
                         'id' => $this->registration->team->id,

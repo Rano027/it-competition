@@ -36,6 +36,8 @@ class CompetitionResource extends JsonResource
             'target_level' => $targetLevel?->value ?? (string) $this->target_level,
             'target_level_label' => $targetLevel?->label() ?? (string) $this->target_level,
             'registration_fee' => (int) $this->registration_fee,
+            'registration_fee_batch_1' => (int) ($this->registration_fee_batch_1 ?? 0),
+            'registration_fee_batch_2' => (int) ($this->registration_fee_batch_2 ?? 0),
             'quota' => (int) $this->quota,
             'min_team_member' => (int) $this->min_team_member,
             'max_team_member' => (int) $this->max_team_member,

@@ -77,6 +77,8 @@ class UpdateCompetitionRequest extends FormRequest
             'theme' => ['nullable', 'string', 'max:255'],
             'target_level' => ['sometimes', 'required', new Enum(CompetitionTargetLevel::class)],
             'registration_fee' => ['sometimes', 'required', 'integer', 'min:0'],
+            'registration_fee_batch_1' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'registration_fee_batch_2' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'quota' => ['sometimes', 'required', 'integer', 'min:1'],
             'min_team_member' => ['sometimes', 'required', 'integer', 'min:1'],
             'max_team_member' => ['sometimes', 'required', 'integer', 'gte:'.$minTeamMember],

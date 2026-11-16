@@ -18,8 +18,7 @@ import {
   Layers,
   Calendar
 } from 'lucide-react';
-import mockService from '../../services/mockService';
-import PageHeader from '../../components/dashboard/PageHeader';
+import competitionService from '../../services/competitionService';import PageHeader from '../../components/dashboard/PageHeader';
 import DataTable from '../../components/dashboard/DataTable';
 import SearchInput from '../../components/dashboard/SearchInput';
 import StatusBadge from '../../components/dashboard/StatusBadge';
@@ -29,13 +28,14 @@ import Button from '../../components/ui/Button';
 // Category normalization helper
 const normalizeCategory = (cat) => {
   if (!cat) return '';
+
   const s = String(cat).toLowerCase().replace(/[^a-z0-9]/g, '');
+
   if (s.includes('ui') && s.includes('ux')) return 'ui_ux';
-  if (s.includes('web')) return 'web_dev';
-  if (s.includes('mobile')) return 'mobile_dev';
-  if (s.includes('comp') || s.includes('prog') || s.includes('algo') || s.includes('cpc')) return 'competitive_prog';
-  if (s.includes('data') || s.includes('ai') || s.includes('analytic')) return 'data_science';
-  if (s.includes('cyber') || s.includes('security') || s.includes('ctf') || s.includes('siber')) return 'cyber_security';
+  if (s.includes('web')) return 'web_development';
+  if (s.includes('lkti')) return 'lkti';
+  if (s.includes('poster')) return 'poster';
+
   return s;
 };
 
@@ -52,16 +52,36 @@ const normalizeStatus = (st) => {
 };
 
 export const AdminCompetitionsPage = () => {
-  // Sync state with mockService.competitions
-  const [competitions, setCompetitions] = useState(() => {
-    // Ensure mock service competitions are loaded and normalized
-    if (!mockService.competitions || mockService.competitions.length === 0) {
-      mockService.normalizeCompetitions();
-    }
-    return [...mockService.competitions];
-  });
+  // State kompetisi dari API Laravel
+const [competitions, setCompetitions] = useState([]);
+const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] = useState(false);
+const fetchCompetitions = async () => {
+  try {
+    setLoading(true);
+
+    const response = await competitionService.getAdminCompetitions({
+      per_page: 100,
+    });
+
+    const result = response.data?.data ?? response.data;
+
+    setCompetitions(Array.isArray(result) ? result : result?.data ?? []);
+  } catch (error) {
+    console.error('Gagal mengambil data kompetisi:', error);
+
+    setAlertMessage({
+      type: 'error',
+      text: error.response?.data?.message || 'Gagal mengambil data kompetisi dari server.',
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  fetchCompetitions();
+}, []);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -81,14 +101,16 @@ export const AdminCompetitionsPage = () => {
     name: '',
     category: 'ui_ux',
     category_label: 'UI/UX Design',
-    target_level: 'all',
-    target_level_label: 'Umum / Mahasiswa & Pelajar',
+    target_level: 'university',
+    target_level_label: 'Mahasiswa (Perguruan Tinggi)',
     theme: '',
     description: '',
     prizePool: 'Rp 5.000.000',
     min_team_member: 1,
     max_team_member: 3,
-    registration_fee: 50000,
+    registration_fee: 80000,
+    registration_fee_batch_1: 80000,
+    registration_fee_batch_2: 95000,
     quota: 50,
     status: 'registration_open',
     guidebook_url: '/guidebook-itc-2026.pdf'
@@ -98,14 +120,12 @@ export const AdminCompetitionsPage = () => {
 
   // Canonical Category definitions
   const categoryDefinitions = [
-    { value: 'all', label: 'Semua Kategori' },
-    { value: 'ui_ux', label: 'UI/UX Design' },
-    { value: 'web_dev', label: 'Web Development' },
-    { value: 'mobile_dev', label: 'Mobile App' },
-    { value: 'competitive_prog', label: 'Competitive Programming' },
-    { value: 'data_science', label: 'Data Science' },
-    { value: 'cyber_security', label: 'Cyber Security' },
-  ];
+  { value: 'all', label: 'Semua Kategori' },
+  { value: 'lkti', label: 'LKTI' },
+  { value: 'poster', label: 'Desain Poster' },
+  { value: 'ui_ux', label: 'UI/UX Design' },
+  { value: 'web_development', label: 'Web Development' },
+];
 
   // Canonical Status definitions
   const statusDefinitions = [
@@ -202,14 +222,25 @@ export const AdminCompetitionsPage = () => {
       name: comp.name || '',
       category: normalizeCategory(comp.category) || 'ui_ux',
       category_label: comp.category_label || comp.category,
-      target_level: comp.target_level || 'all',
-      target_level_label: comp.target_level_label || 'Mahasiswa & Pelajar',
+      target_level:
+  comp.target_level === 'high_school' || 
+  comp.target_level === 'siswa'
+    ? 'high_school'
+    : 'university',
+
+  target_level_label:
+    comp.target_level === 'high_school' || 
+  comp.target_level === 'siswa'
+    ? 'Siswa (SMA / SMK / Sederajat)'
+    : 'Mahasiswa (Perguruan Tinggi)',
       theme: comp.theme || '',
       description: comp.description || '',
       prizePool: comp.prizePool || 'Rp 5.000.000',
       min_team_member: comp.min_team_member || 1,
       max_team_member: comp.max_team_member || 3,
-      registration_fee: comp.registration_fee || 0,
+      registration_fee: comp.registration_fee ?? 0,
+      registration_fee_batch_1: comp.registration_fee_batch_1 ?? comp.registration_fee ?? 0,
+      registration_fee_batch_2: comp.registration_fee_batch_2 ?? comp.registration_fee ?? 0,
       quota: comp.quota || 50,
       status: normalizeStatus(comp.status) || 'registration_open',
       guidebook_url: comp.guidebook_url || '/guidebook-itc-2026.pdf'
@@ -234,53 +265,105 @@ export const AdminCompetitionsPage = () => {
   };
 
   // Save (Create or Update)
-  const handleSave = (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+  
+const handleSave = async (e) => {
+  e.preventDefault();
 
-    const catObj = categoryDefinitions.find((c) => c.value === formData.category);
-    const catLabel = catObj ? catObj.label : formData.category;
+  if (!validateForm()) return;
 
-    const payload = {
-      ...formData,
-      category_label: catLabel,
-      min_team_member: Number(formData.min_team_member),
-      max_team_member: Number(formData.max_team_member),
-      registration_fee: Number(formData.registration_fee),
-      quota: Number(formData.quota),
-    };
+  const catObj = categoryDefinitions.find(
+    (c) => c.value === formData.category
+  );
 
-    const saved = mockService.createOrUpdateCompetition(payload);
-    setCompetitions([...mockService.competitions]);
+  const payload = {
+    name: formData.name.trim(),
+    category: formData.category,
+    target_level: formData.target_level,
+    theme: formData.theme,
+    description: formData.description,
+    min_team_member: Number(formData.min_team_member),
+    max_team_member: Number(formData.max_team_member),
+
+    // Biaya pendaftaran
+    registration_fee: Number(formData.registration_fee_batch_1),
+    registration_fee_batch_1: Number(formData.registration_fee_batch_1),
+    registration_fee_batch_2: Number(formData.registration_fee_batch_2),
+
+    quota: Number(formData.quota),
+    status: formData.status,
+    guidebook_url: formData.guidebook_url || null,
+  };
+
+  try {
+    const response = editingComp
+      ? await competitionService.updateCompetition(editingComp.id, payload)
+      : await competitionService.createCompetition(payload);
+
+    const saved = response.data ?? response;
+
+    await fetchCompetitions();
+
     setIsModalOpen(false);
+    setAlertMessage({
+      type: 'success',
+      text: editingComp
+        ? `Kompetisi "${saved.name || formData.name}" berhasil diperbarui!`
+        : `Kompetisi "${saved.name || formData.name}" berhasil ditambahkan!`,
+    });
+
+    setTimeout(() => setAlertMessage(null), 5000);
+  } catch (error) {
+    console.error('Gagal menyimpan kompetisi:', error);
+
+    if (error.response?.status === 422) {
+      setFormErrors(error.response.data.errors || {});
+    }
+
+    setAlertMessage({
+      type: 'error',
+      text:
+        error.response?.data?.message ||
+        'Gagal menyimpan kompetisi. Periksa kembali data dan koneksi API.',
+    });
+  }
+};
+
+  // Delete Action
+  
+const handleDelete = async () => {
+  if (!confirmDelete.compId) return;
+
+  try {
+    const deletedName = confirmDelete.compName;
+
+    await competitionService.deleteCompetition(confirmDelete.compId);
+
+    await fetchCompetitions();
 
     setAlertMessage({
       type: 'success',
-      text: editingComp 
-        ? `Cabang kompetisi "${saved.name}" berhasil diperbarui!` 
-        : `Cabang kompetisi baru "${saved.name}" berhasil ditambahkan dan siap menerima pendaftaran!`
+      text: `Kompetisi "${deletedName}" berhasil dihapus.`,
     });
-    setTimeout(() => setAlertMessage(null), 5000);
-  };
 
-  // Delete Action
-  const handleDelete = () => {
-    if (!confirmDelete.compId) return;
-    const idx = mockService.competitions.findIndex((c) => c.id === confirmDelete.compId);
-    if (idx !== -1) {
-      const deletedName = mockService.competitions[idx].name;
-      mockService.competitions.splice(idx, 1);
-      mockService.saveState();
-      setCompetitions([...mockService.competitions]);
-      
-      setAlertMessage({
-        type: 'info',
-        text: `Cabang kompetisi "${deletedName}" telah dihapus dari data lokal.`
-      });
-      setTimeout(() => setAlertMessage(null), 5000);
-    }
-    setConfirmDelete({ isOpen: false, compId: null, compName: '' });
-  };
+    setTimeout(() => setAlertMessage(null), 5000);
+  } catch (error) {
+    console.error('Gagal menghapus kompetisi:', error);
+
+    setAlertMessage({
+      type: 'error',
+      text:
+        error.response?.data?.message ||
+        'Gagal menghapus kompetisi.',
+    });
+  } finally {
+    setConfirmDelete({
+      isOpen: false,
+      compId: null,
+      compName: '',
+    });
+  }
+};
+
 
   // Table columns definition
   const columns = [
@@ -315,18 +398,22 @@ export const AdminCompetitionsPage = () => {
         </div>
       ),
     },
-    {
-      header: 'Biaya & Hadiah',
-      accessor: 'fees',
-      render: (row) => (
-        <div>
-          <p className="text-xs font-bold text-[#FF6A00] font-mono">
-            {row.registration_fee > 0 ? `Rp ${row.registration_fee.toLocaleString('id-ID')}` : 'Gratis'}
-          </p>
-          <p className="text-[11px] text-[#FFB36B] font-mono">{row.prizePool}</p>
-        </div>
-      ),
-    },
+    
+{
+  header: 'Biaya Pendaftaran',
+  accessor: 'fees',
+  render: (row) => (
+    <div className="space-y-1">
+      <p className="text-xs font-bold text-[#FF6A00] font-mono">
+        Batch 1: Rp {(row.registration_fee_batch_1 ?? row.registration_fee ?? 0).toLocaleString('id-ID')}
+      </p>
+      <p className="text-xs font-bold text-[#FFB36B] font-mono">
+        Batch 2: Rp {(row.registration_fee_batch_2 ?? row.registration_fee ?? 0).toLocaleString('id-ID')}
+      </p>
+    </div>
+  ),
+},
+
     {
       header: 'Kuota',
       accessor: 'quota',
@@ -522,8 +609,17 @@ export const AdminCompetitionsPage = () => {
       </div>
 
       {/* DATA DISPLAY SECTION */}
-      {competitions.length === 0 ? (
-        // Condition: Empty Source Data
+{loading ? (
+  <div className="p-12 bg-[#17110D] border border-[rgba(255,179,107,0.18)] rounded-3xl text-center space-y-3">
+    <div className="flex justify-center">
+      <div className="w-8 h-8 border-4 border-[#2A1D15] border-t-[#FF6A00] rounded-full animate-spin" />
+    </div>
+    <p className="text-sm text-[#C4B3A7]">
+      Memuat data kompetisi...
+    </p>
+  </div>
+) : competitions.length === 0 ? (        
+  // Condition: Empty Source Data
         <div className="p-12 bg-[#17110D] border border-[rgba(255,179,107,0.18)] rounded-3xl text-center space-y-4">
           <div className="w-16 h-16 rounded-2xl bg-[#2A1D15] border border-[rgba(255,179,107,0.25)] flex items-center justify-center text-[#FFB36B] mx-auto shadow-orange-glow">
             <Trophy className="w-8 h-8" />
@@ -630,15 +726,27 @@ export const AdminCompetitionsPage = () => {
                   </label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm text-[#FFF7F0] focus:outline-none focus:border-[#FF6A00]"
+                    onChange={(e) => {
+                      const category = e.target.value;
+                      const isStudentCategory = ['lkti', 'poster'].includes(category);
+
+                      setFormData({
+                        ...formData,
+                        category,
+                        target_level: isStudentCategory ? 'high_school' : 'university',
+                        target_level_label: isStudentCategory
+                          ? 'Siswa (SMA / SMK / Sederajat)'
+                          : 'Mahasiswa (Perguruan Tinggi)',
+                        registration_fee: isStudentCategory ? 50000 : 80000,
+                        registration_fee_batch_1: isStudentCategory ? 50000 : 80000,
+                        registration_fee_batch_2: isStudentCategory ? 65000 : 95000,
+                      });
+                    }}                    className="w-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm text-[#FFF7F0] focus:outline-none focus:border-[#FF6A00]"
                   >
+                    <option value="lkti">LKTI</option>
+                    <option value="poster">Desain Poster</option>
                     <option value="ui_ux">UI/UX Design</option>
-                    <option value="web_dev">Web Development</option>
-                    <option value="mobile_dev">Mobile App</option>
-                    <option value="competitive_prog">Competitive Programming</option>
-                    <option value="data_science">Data Science</option>
-                    <option value="cyber_security">Cyber Security</option>
+                    <option value="web_development">Web Development</option>
                   </select>
                 </div>
 
@@ -651,9 +759,12 @@ export const AdminCompetitionsPage = () => {
                     onChange={(e) => setFormData({ ...formData, target_level: e.target.value })}
                     className="w-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm text-[#FFF7F0] focus:outline-none focus:border-[#FF6A00]"
                   >
-                    <option value="all">Semua (Mahasiswa & SMA/SMK)</option>
-                    <option value="mahasiswa">Mahasiswa (D3/D4/S1)</option>
-                    <option value="siswa">Pelajar SMA/SMK Sederajat</option>
+                    <option value="university">
+                       Mahasiswa (Perguruan Tinggi)
+                    </option>
+                    <option value="high_school">
+                      Siswa SMA/SMK/Sederajat
+                    </option>
                   </select>
                 </div>
 
@@ -718,19 +829,45 @@ export const AdminCompetitionsPage = () => {
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-xs font-mono text-[#FFB36B] uppercase tracking-wider mb-1">
-                    Biaya Registrasi (Rp)
-                  </label>
-                  <input
-                    type="number"
-                    min={0}
-                    step={5000}
-                    value={formData.registration_fee}
-                    onChange={(e) => setFormData({ ...formData, registration_fee: e.target.value })}
-                    className="w-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm text-[#FFF7F0] focus:outline-none focus:border-[#FF6A00]"
-                  />
-                </div>
+                
+<div>
+  <label className="block text-xs font-mono text-[#FFB36B] uppercase tracking-wider mb-1">
+    Biaya Pendaftaran Batch 1 (Rp)
+  </label>
+  <input
+    type="number"
+    min={0}
+    step={1000}
+    value={formData.registration_fee_batch_1}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        registration_fee_batch_1: e.target.value,
+      })
+    }
+    className="w-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm text-[#FFF7F0] focus:outline-none focus:border-[#FF6A00]"
+  />
+</div>
+
+<div>
+  <label className="block text-xs font-mono text-[#FFB36B] uppercase tracking-wider mb-1">
+    Biaya Pendaftaran Batch 2 (Rp)
+  </label>
+  <input
+    type="number"
+    min={0}
+    step={1000}
+    value={formData.registration_fee_batch_2}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        registration_fee_batch_2: e.target.value,
+      })
+    }
+    className="w-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm text-[#FFF7F0] focus:outline-none focus:border-[#FF6A00]"
+  />
+</div>
+
 
                 <div>
                   <label className="block text-xs font-mono text-[#FFB36B] uppercase tracking-wider mb-1">
@@ -826,12 +963,27 @@ export const AdminCompetitionsPage = () => {
                   <span className="text-[#948277] block text-[10px]">TOTAL PRIZE POOL</span>
                   <span className="text-[#FF6A00] font-bold">{selectedComp.prizePool}</span>
                 </div>
+                
                 <div className="p-3 bg-[#1C1410] rounded-xl border border-[rgba(255,179,107,0.1)]">
                   <span className="text-[#948277] block text-[10px]">BIAYA PENDAFTARAN</span>
-                  <span className="text-[#FFF7F0] font-bold">
-                    {selectedComp.registration_fee > 0 ? `Rp ${selectedComp.registration_fee.toLocaleString('id-ID')}` : 'Gratis'}
-                  </span>
+
+                  <div className="mt-2 space-y-2">
+                    <div>
+                      <span className="text-xs text-[#948277]">Batch 1</span>
+                      <p className="text-[#FFF7F0] font-bold">
+                        Rp {(selectedComp.registration_fee_batch_1 ?? selectedComp.registration_fee ?? 0).toLocaleString('id-ID')}
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="text-xs text-[#948277]">Batch 2</span>
+                      <p className="text-[#FFF7F0] font-bold">
+                        Rp {(selectedComp.registration_fee_batch_2 ?? selectedComp.registration_fee ?? 0).toLocaleString('id-ID')}
+                      </p>
+                    </div>
+                  </div>
                 </div>
+
                 <div className="p-3 bg-[#1C1410] rounded-xl border border-[rgba(255,179,107,0.1)]">
                   <span className="text-[#948277] block text-[10px]">KUOTA TIM</span>
                   <span className="text-[#FFF7F0] font-bold">{selectedComp.quota} Tim</span>
