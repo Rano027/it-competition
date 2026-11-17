@@ -52,4 +52,4 @@ ENV PORT=10000
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "echo '=== RUNTIME MPM FILES ==='; ls -la /etc/apache2/mods-enabled/*mpm*; echo '=== RUNTIME LOADMODULE ==='; grep -R 'LoadModule mpm_' /etc/apache2; echo '=== APACHE MODULES ==='; apache2ctl -M 2>&1; sed -i \"s/Listen 80/Listen ${PORT}/\" /etc/apache2/ports.conf; sed -i \"s/<VirtualHost \\*:80>/<VirtualHost *:${PORT}>/\" /etc/apache2/sites-available/000-default.conf; exec apache2-foreground"]
+CMD ["sh", "-c", "rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.*; echo '=== ACTIVE MPM ==='; ls -la /etc/apache2/mods-enabled/*mpm*; apache2ctl -M; sed -i \"s/Listen 80/Listen ${PORT}/\" /etc/apache2/ports.conf; sed -i \"s/<VirtualHost \\*:80>/<VirtualHost *:${PORT}>/\" /etc/apache2/sites-available/000-default.conf; exec apache2-foreground"]
