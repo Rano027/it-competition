@@ -2,7 +2,7 @@
 FROM php:8.3-apache
 
 RUN apt-get update && apt-get install -y \
-    git unzip libpq-dev libzip-dev libpng-dev \
+    git unzip libpq-dev libonig-dev libzip-dev libpng-dev \
     libjpeg62-turbo-dev libfreetype6-dev libicu-dev libxml2-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
