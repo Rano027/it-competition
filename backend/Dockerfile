@@ -11,8 +11,10 @@ RUN apt-get update && apt-get install -y \
 
 RUN rm -f /etc/apache2/mods-enabled/mpm_event.* \
     /etc/apache2/mods-enabled/mpm_worker.* \
-    /etc/apache2/mods-enabled/mpm_prefork.* \
-    && a2enmod mpm_prefork rewrite# Laravel public directory
+    /etc/apache2/mods-enabled/mpm_prefork.*
+
+RUN a2enmod mpm_prefork rewrite
+
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN sed -ri \
