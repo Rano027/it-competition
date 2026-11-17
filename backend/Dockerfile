@@ -13,8 +13,11 @@ RUN rm -f /etc/apache2/mods-enabled/mpm_event.* \
     /etc/apache2/mods-enabled/mpm_worker.* \
     /etc/apache2/mods-enabled/mpm_prefork.*
 
-RUN a2enmod mpm_prefork rewrite
-
+RUN a2enmod mpm_prefork rewrite \
+    && ls -la /etc/apache2/mods-enabled/*mpm* \
+    && echo "=== APACHE MPM CHECK ===" \
+    && apache2ctl -M 2>&1 | grep -i mpm
+    
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN sed -ri \
