@@ -9,8 +9,7 @@ RUN apt-get update && apt-get install -y \
     pdo_mysql mbstring bcmath exif gd intl opcache zip    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN a2enmod rewrite
-
+RUN a2dismod mpm_event mpm_worker && a2enmod mpm_prefork rewrite
 # Laravel public directory
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
