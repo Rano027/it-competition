@@ -17,7 +17,7 @@ RUN a2enmod mpm_prefork rewrite \
     && ls -la /etc/apache2/mods-enabled/*mpm* \
     && echo "=== APACHE MPM CHECK ===" \
     && apache2ctl -M 2>&1 | grep -i mpm
-    
+
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN sed -ri \
@@ -52,4 +52,4 @@ ENV PORT=10000
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "sed -i \"s/Listen 80/Listen ${PORT}/\" /etc/apache2/ports.conf && sed -i \"s/<VirtualHost \\*:80>/<VirtualHost *:${PORT}>/\" /etc/apache2/sites-available/000-default.conf && exec apache2-foreground"]
+CMD ["sh", "-c", "echo '=== RUNTIME MPM FILES ==='; ls -la /etc/apache2/mods-enabled/*mpm*; echo '=== RUNTIME LOADMODULE ==='; grep -R 'LoadModule mpm_' /etc/apache2; echo '=== APACHE MODULES ==='; apache2ctl -M 2>&1; sed -i \"s/Listen 80/Listen ${PORT}/\" /etc/apache2/ports.conf; sed -i \"s/<VirtualHost \\*:80>/<VirtualHost *:${PORT}>/\" /etc/apache2/sites-available/000-default.conf; exec apache2-foreground"]
