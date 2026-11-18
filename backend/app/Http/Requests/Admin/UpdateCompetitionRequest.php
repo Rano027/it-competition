@@ -39,6 +39,31 @@ class UpdateCompetitionRequest extends FormRequest
             $merge['is_published'] = $this->boolean('is_active');
         }
 
+       $competition = $this->route('competition');
+
+if (
+    $this->exists('quota_batch_1') ||
+    $this->exists('quota_batch_2')
+) {
+    if (! $competition instanceof Competition) {
+        $competition = Competition::find($competition);
+    }
+
+    $batch1 = (int) $this->input(
+        'quota_batch_1',
+        $competition?->quota_batch_1 ?? 20
+    );
+
+    $batch2 = (int) $this->input(
+        'quota_batch_2',
+        $competition?->quota_batch_2 ?? 20
+    );
+
+    $merge['quota_batch_1'] = $batch1;
+    $merge['quota_batch_2'] = $batch2;
+    $merge['quota'] = $batch1 + $batch2;
+}
+
         if (! empty($merge)) {
             $this->merge($merge);
         }
@@ -79,7 +104,9 @@ class UpdateCompetitionRequest extends FormRequest
             'registration_fee' => ['sometimes', 'required', 'integer', 'min:0'],
             'registration_fee_batch_1' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'registration_fee_batch_2' => ['sometimes', 'nullable', 'integer', 'min:0'],
-            'quota' => ['sometimes', 'required', 'integer', 'min:1'],
+            'quota_batch_1' => ['sometimes', 'required', 'integer', 'min:1'],
+            'quota_batch_2' => ['sometimes', 'required', 'integer', 'min:1'],
+            'quota' => ['sometimes', 'required', 'integer', 'min:2'],
             'min_team_member' => ['sometimes', 'required', 'integer', 'min:1'],
             'max_team_member' => ['sometimes', 'required', 'integer', 'gte:'.$minTeamMember],
             'registration_start' => ['nullable', 'date'],

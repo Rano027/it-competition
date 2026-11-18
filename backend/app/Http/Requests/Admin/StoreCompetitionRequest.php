@@ -37,6 +37,15 @@ class StoreCompetitionRequest extends FormRequest
             $merge['is_published'] = $this->boolean('is_active');
         }
 
+        if ($this->has('quota_batch_1') || $this->has('quota_batch_2')) {
+            $batch1 = (int) $this->input('quota_batch_1', 20);
+            $batch2 = (int) $this->input('quota_batch_2', 20);
+
+            $merge['quota_batch_1'] = $batch1;
+            $merge['quota_batch_2'] = $batch2;
+            $merge['quota'] = $batch1 + $batch2;
+        }
+
         if (! empty($merge)) {
             $this->merge($merge);
         }
@@ -54,7 +63,9 @@ class StoreCompetitionRequest extends FormRequest
             'registration_fee' => ['required', 'integer', 'min:0'],
             'registration_fee_batch_1' => ['nullable', 'integer', 'min:0'],
             'registration_fee_batch_2' => ['nullable', 'integer', 'min:0'],
-            'quota' => ['required', 'integer', 'min:1'],
+            'quota_batch_1' => ['required', 'integer', 'min:1'],
+            'quota_batch_2' => ['required', 'integer', 'min:1'],
+            'quota' => ['required', 'integer', 'min:2'],
             'min_team_member' => ['required', 'integer', 'min:1'],
             'max_team_member' => ['required', 'integer', 'gte:min_team_member'],
             'registration_start' => ['nullable', 'date'],
