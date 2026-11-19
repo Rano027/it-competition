@@ -38,6 +38,8 @@ class CompetitionResource extends JsonResource
             'registration_fee' => (int) $this->registration_fee,
             'registration_fee_batch_1' => (int) ($this->registration_fee_batch_1 ?? 0),
             'registration_fee_batch_2' => (int) ($this->registration_fee_batch_2 ?? 0),
+            'quota_batch_1' => (int) $this->quota_batch_1,
+            'quota_batch_2' => (int) $this->quota_batch_2,
             'quota' => (int) $this->quota,
             'min_team_member' => (int) $this->min_team_member,
             'max_team_member' => (int) $this->max_team_member,

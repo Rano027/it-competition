@@ -94,6 +94,7 @@ useEffect(() => {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [editingComp, setEditingComp] = useState(null);
   const [selectedComp, setSelectedComp] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState({ isOpen: false, compId: null, compName: '' });
 
   // Form state
@@ -111,8 +112,10 @@ useEffect(() => {
     registration_fee: 80000,
     registration_fee_batch_1: 80000,
     registration_fee_batch_2: 95000,
-    quota: 50,
-    status: 'registration_open',
+    quota_batch_1: 20,
+    quota_batch_2: 20,
+    quota: 40,
+    status: 'draft',
     guidebook_url: '/guidebook-itc-2026.pdf'
   };
   const [formData, setFormData] = useState(defaultForm);
@@ -241,8 +244,10 @@ useEffect(() => {
       registration_fee: comp.registration_fee ?? 0,
       registration_fee_batch_1: comp.registration_fee_batch_1 ?? comp.registration_fee ?? 0,
       registration_fee_batch_2: comp.registration_fee_batch_2 ?? comp.registration_fee ?? 0,
-      quota: comp.quota || 50,
-      status: normalizeStatus(comp.status) || 'registration_open',
+      quota_batch_1: comp.quota_batch_1 ?? 20,
+      quota_batch_2: comp.quota_batch_2 ?? 20,
+      quota: comp.quota ?? 40,
+      status: normalizeStatus(comp.status) || 'draft',
       guidebook_url: comp.guidebook_url || '/guidebook-itc-2026.pdf'
     });
     setFormErrors({});
@@ -259,8 +264,13 @@ useEffect(() => {
     if (Number(formData.max_team_member) < Number(formData.min_team_member)) {
       errs.max_team_member = 'Maksimal anggota tidak boleh kurang dari minimal';
     }
-    if (Number(formData.quota) < 1) errs.quota = 'Kuota minimal 1 tim';
-    setFormErrors(errs);
+if (Number(formData.quota_batch_1) < 1) {
+  errs.quota_batch_1 = 'Kuota Batch 1 minimal 1 pendaftar';
+}
+
+if (Number(formData.quota_batch_2) < 1) {
+  errs.quota_batch_2 = 'Kuota Batch 2 minimal 1 pendaftar';
+}    setFormErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
@@ -289,7 +299,11 @@ const handleSave = async (e) => {
     registration_fee_batch_1: Number(formData.registration_fee_batch_1),
     registration_fee_batch_2: Number(formData.registration_fee_batch_2),
 
-    quota: Number(formData.quota),
+    quota_batch_1: Number(formData.quota_batch_1),
+    quota_batch_2: Number(formData.quota_batch_2),
+    quota:
+    Number(formData.quota_batch_1) +
+    Number(formData.quota_batch_2),    
     status: formData.status,
     guidebook_url: formData.guidebook_url || null,
   };
@@ -364,6 +378,29 @@ const handleDelete = async () => {
   }
 };
 
+const handleViewDetails = async (comp) => {
+  try {
+    setDetailLoading(true);
+    setSelectedComp(comp);
+    setIsDetailOpen(true);
+
+    const response = await competitionService.getAdminCompetition(comp.id);
+
+    const result = response.data?.data ?? response.data;
+
+    setSelectedComp(result);
+  } catch (error) {
+    console.error('Gagal mengambil detail kompetisi:', error);
+
+    setAlertMessage({
+      type: 'error',
+      text: error.response?.data?.message ||
+        'Gagal mengambil detail kompetisi dari server.',
+    });
+  } finally {
+    setDetailLoading(false);
+  }
+};
 
   // Table columns definition
   const columns = [
@@ -414,15 +451,25 @@ const handleDelete = async () => {
   ),
 },
 
-    {
-      header: 'Kuota',
-      accessor: 'quota',
-      render: (row) => (
-        <span className="text-xs font-mono text-[#C4B3A7] px-2 py-1 rounded-lg bg-[#211811] border border-[rgba(255,179,107,0.12)]">
-          {row.quota} Tim
-        </span>
-      ),
-    },
+    
+{
+  header: 'Kuota Pendaftar',
+  accessor: 'quota',
+  render: (row) => (
+    <div className="space-y-1 text-xs font-mono">
+      <p className="text-[#FFB36B]">
+        Batch 1: {row.quota_batch_1 ?? 20}
+      </p>
+      <p className="text-[#FFB36B]">
+        Batch 2: {row.quota_batch_2 ?? 20}
+      </p>
+      <p className="text-[#FFF7F0] font-bold">
+        Total: {row.quota ?? 40} Pendaftar
+      </p>
+    </div>
+  ),
+},
+
     {
       header: 'Status',
       accessor: 'status',
@@ -435,22 +482,19 @@ const handleDelete = async () => {
       render: (row) => (
         <div className="flex items-center justify-end space-x-1.5">
           <button
-            onClick={() => {
-              setSelectedComp(row);
-              setIsDetailOpen(true);
-            }}
+            onClick={() => handleViewDetails(row)}
             title="Lihat Detail Spesifikasi"
             className="p-1.5 rounded-lg text-[#C4B3A7] hover:text-[#FFF7F0] hover:bg-[#2A1D15] transition-colors"
           >
             <Eye className="w-4 h-4" />
           </button>
           <button
-            onClick={() => handleOpenEdit(row)}
-            title="Edit Kompetisi"
-            className="p-1.5 rounded-lg text-[#FFB36B] hover:text-[#FF6A00] hover:bg-[#2A1D15] transition-colors"
-          >
-            <Edit3 className="w-4 h-4" />
-          </button>
+  onClick={() => handleOpenEdit(row)}
+  title="Edit Kompetisi"
+  className="p-1.5 rounded-lg text-[#FFB36B] hover:text-[#FF6A00] hover:bg-[#2A1D15] transition-colors"
+>
+  <Edit3 className="w-4 h-4" />
+</button>
           <button
             onClick={() =>
               setConfirmDelete({
@@ -869,18 +913,61 @@ const handleDelete = async () => {
 </div>
 
 
-                <div>
-                  <label className="block text-xs font-mono text-[#FFB36B] uppercase tracking-wider mb-1">
-                    Kuota Tim
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    value={formData.quota}
-                    onChange={(e) => setFormData({ ...formData, quota: e.target.value })}
-                    className="w-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm text-[#FFF7F0] focus:outline-none focus:border-[#FF6A00]"
-                  />
-                </div>
+               
+<div>
+  <label className="block text-xs font-mono text-[#FFB36B] uppercase tracking-wider mb-1">
+    Kuota Pendaftar Batch 1
+  </label>
+  <input
+    type="number"
+    min={1}
+    value={formData.quota_batch_1}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        quota_batch_1: e.target.value,
+      })
+    }
+    className="w-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm text-[#FFF7F0] focus:outline-none focus:border-[#FF6A00]"
+  />
+</div>
+
+<div>
+  <label className="block text-xs font-mono text-[#FFB36B] uppercase tracking-wider mb-1">
+    Kuota Pendaftar Batch 2
+  </label>
+  <input
+    type="number"
+    min={1}
+    value={formData.quota_batch_2}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        quota_batch_2: e.target.value,
+      })
+    }
+    className="w-full bg-[#1C1410] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm text-[#FFF7F0] focus:outline-none focus:border-[#FF6A00]"
+  />
+</div>
+
+<div className="sm:col-span-2">
+  <label className="block text-xs font-mono text-[#FFB36B] uppercase tracking-wider mb-1">
+    Total Kuota Pendaftar
+  </label>
+  <input
+    type="number"
+    value={
+      Number(formData.quota_batch_1 || 0) +
+      Number(formData.quota_batch_2 || 0)
+    }
+    readOnly
+    className="w-full bg-[#211811] border border-[rgba(255,179,107,0.2)] rounded-xl px-4 py-2.5 text-sm font-bold text-[#FF6A00]"
+  />
+  <p className="text-[10px] text-[#948277] mt-1">
+    Total kuota dihitung otomatis berdasarkan Batch 1 + Batch 2.
+  </p>
+</div>
+
 
                 <div>
                   <label className="block text-xs font-mono text-[#FFB36B] uppercase tracking-wider mb-1">
@@ -961,7 +1048,11 @@ const handleDelete = async () => {
                 </div>
                 <div className="p-3 bg-[#1C1410] rounded-xl border border-[rgba(255,179,107,0.1)]">
                   <span className="text-[#948277] block text-[10px]">TOTAL PRIZE POOL</span>
-                  <span className="text-[#FF6A00] font-bold">{selectedComp.prizePool}</span>
+                  <span className="text-[#FF6A00] font-bold">
+                    {selectedComp.prize_pool
+                      ? `Rp ${Number(selectedComp.prize_pool).toLocaleString('id-ID')}`
+                      : 'Belum dikonfigurasi'}
+                  </span>                
                 </div>
                 
                 <div className="p-3 bg-[#1C1410] rounded-xl border border-[rgba(255,179,107,0.1)]">
@@ -984,27 +1075,71 @@ const handleDelete = async () => {
                   </div>
                 </div>
 
-                <div className="p-3 bg-[#1C1410] rounded-xl border border-[rgba(255,179,107,0.1)]">
-                  <span className="text-[#948277] block text-[10px]">KUOTA TIM</span>
-                  <span className="text-[#FFF7F0] font-bold">{selectedComp.quota} Tim</span>
-                </div>
+                
+<div className="p-3 bg-[#1C1410] rounded-xl border border-[rgba(255,179,107,0.1)]">
+  <span className="text-[#948277] block text-[10px]">
+    KUOTA PENDAFTAR
+  </span>
+
+  <div className="mt-2 space-y-2">
+    <div className="flex justify-between text-xs">
+      <span className="text-[#C4B3A7]">Batch 1</span>
+      <span className="text-[#FFF7F0] font-bold">
+        {selectedComp.quota_batch_1 ?? 20} Pendaftar
+      </span>
+    </div>
+
+    <div className="flex justify-between text-xs">
+      <span className="text-[#C4B3A7]">Batch 2</span>
+      <span className="text-[#FFF7F0] font-bold">
+        {selectedComp.quota_batch_2 ?? 20} Pendaftar
+      </span>
+    </div>
+
+    <div className="border-t border-[rgba(255,179,107,0.15)] pt-2 flex justify-between text-xs">
+      <span className="text-[#FFB36B] font-bold">Total Kuota</span>
+      <span className="text-[#FF6A00] font-bold">
+        {selectedComp.quota ?? 40} Pendaftar
+      </span>
+    </div>
+  </div>
+</div>
+
               </div>
 
               <div className="p-4 bg-[#1C1410] rounded-2xl border border-[rgba(255,179,107,0.14)] space-y-2">
                 <p className="text-xs font-mono text-[#FFB36B] uppercase">Rubrik Penilaian Terkonfigurasi</p>
                 <div className="space-y-1.5">
-                  {(selectedComp.rubric || [
-                    { id: 'crit-1', name: 'Kualitas Teknis', weight: 40 },
-                    { id: 'crit-2', name: 'Inovasi', weight: 30 },
-                    { id: 'crit-3', name: 'Presentasi', weight: 20 },
-                    { id: 'crit-4', name: 'Dokumentasi', weight: 10 },
-                  ]).map((rub) => (
-                    <div key={rub.id} className="flex justify-between items-center text-xs">
-                      <span className="text-[#C4B3A7]">{rub.name}</span>
-                      <span className="font-mono text-[#FFB36B] font-bold">{rub.weight}%</span>
+                {Array.isArray(selectedComp.criteria) &&
+                selectedComp.criteria.length > 0 ? (
+                  selectedComp.criteria.map((criterion) => (
+                    <div
+                      key={criterion.id}
+                      className="flex justify-between items-center text-xs"
+                    >
+                      <div>
+                        <span className="text-[#C4B3A7]">
+                          {criterion.name}
+                        </span>
+
+                        {criterion.description && (
+                          <p className="text-[10px] text-[#948277] mt-1">
+                            {criterion.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <span className="font-mono text-[#FFB36B] font-bold">
+                        {criterion.weight}%
+                      </span>
                     </div>
-                  ))}
-                </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-[#948277]">
+                    Belum ada kriteria penilaian yang dikonfigurasi.
+                  </p>
+                )}
+              </div>
               </div>
             </div>
 
